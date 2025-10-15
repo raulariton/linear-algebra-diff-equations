@@ -1,0 +1,230 @@
+\documentclass[a4paper,12pt]{article}
+\usepackage[english]{babel}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+
+\usepackage{graphicx}
+
+\usepackage{lmodern}
+
+% math symbols and fonts
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{mathrsfs}
+
+% d for derivatives
+\usepackage{fixdif}
+
+% SI units
+\usepackage{siunitx}
+
+% framed environment, might use in problem introduction
+\usepackage{framed}
+
+% bibtex setup
+\usepackage[backend=biber,
+            style=ieee,
+            ]{biblatex}
+\addbibresource{bibliography.bib}
+
+% context-sensitive quotes package (biblatex suggests using it, idk what it does exactly)
+\usepackage{csquotes}
+
+% hyperref package; convention to always add as last package
+\usepackage{hyperref}
+
+% adding text spacing in math mode
+\renewcommand*{\textnormal}[1]{\text{ #1 }}
+
+% removing highlighting of hyperref links
+\hypersetup{pdfborder={0 0 0}}
+
+% remove indentation
+\setlength{\parindent}{0pt}
+
+\newcommand\numberthis{\addtocounter{equation}{1}\tag{\theequation}}
+
+\begin{document}
+
+\begin{titlepage}
+	\vspace*{-3cm}
+	\centering
+		\includegraphics[width=2cm]{assets/uvt_logo_en.png}
+
+	{\scshape\LARGE West University of Timișoara\par}
+
+	\vspace{1cm}
+
+	{\large Faculty of Computer Science}
+
+	\vspace{.1\textheight}
+	{ \LARGE \scshape Project 1: \\ Snowplow Problem \par}
+
+		\vspace{.1\linewidth}
+
+			{\emph{Authors:} \\
+			Maria-Miruna \textsc{Mesărășoiu} (\textit{Group 1}) \\
+            Silviu-Ștefan \textsc{Mitrea} (\textit{Group 1}) \\
+            Raul-Andrei \textsc{Ariton} (\textit{Group 2})    
+            }
+
+			\vfill
+
+			\rule{.4\textwidth}{.4pt}
+
+	{\large \today\par
+	Academic Year 2025-2026\par}
+\end{titlepage}
+
+\tableofcontents \newpage
+
+\part{The Snowplow Problem}
+\section{Introduction to the problem}
+    Firstly, we shall introduce the problem, as described in \cite{nagle2012fundamentals}. Note that for practicality, we have decided to use kilometers instead of miles.
+
+    \begin{framed}
+        \noindent One morning it began to snow very hard and continued snowing steadily throughout the day. A snowplow set out at 9:00 AM to clear a road, clearing 2 \unit{\kilo\meter} by 11:00 AM. and an additional kilometer by 1:00 PM. At what time did it start snowing?
+    \end{framed}
+    % image, tikZ plot ? :)
+    
+    The source also mentions the following assumptions:
+    \begin{itemize}
+        \item It is snowing at a constant rate.
+        \item The rate at which the snowplow can clear a road is inversely proportional to the height (or depth) of the snow.
+    \end{itemize}
+
+\section{Solution}
+    We shall now begin the attempt at solving the problem. 
+
+    \noindent Let us consider the following notations:
+    \begin{itemize}
+        \item $t$ - time since 9:00 AM (hours)
+        \item $x(t)$ - the distance that the snowplow has travelled ($\unit{\kilo\meter}$) at time $t$
+        \item $h(t)$ - the height of the snow ($\unit{\centi\meter}$) at time $t$
+    \end{itemize}
+    Additionally:
+    \begin{itemize}
+        \item b - the number of hours before 9:00 AM when it started snowing
+        \item r - rate of snowfall ($\unit{\centi\meter / h}$)
+    \end{itemize}
+
+    Since it is snowing at a constant rate, the height of the snow $h$ is increasing at a constant rate. Mathematically this means that the derivative of $h$ is constant, and equal to $r$, $r \in \mathbb{R}$.
+
+    \begin{align*}
+        h'(t) = \frac{\d h}{\d t} = r
+    \end{align*}
+
+    Thus $h$ is a linear function with slope $r$ and with the equation
+    \begin{align*}
+        h(t) = r t+ C, \quad C \in \mathbb{R}
+    \end{align*}
+    That's a lot of letters and unknowns. Let us attempt to substitute the constant $C$ in the equation of $h(t)$ with something more relevant to our problem.
+    We consider $t = 0$ the moment that the snowplow sets out to clear the road. Similarly, $t = 0-b$ is the moment that it starts snowing, and the height of the snow is equal to $0$.
+    \begin{align*}
+        &h(0-b) = r (0-b) + C \\
+        &0 = -rb + C \\
+        &\boxed{C = rb}
+    \end{align*}
+    And now we can substitute $C$ in the equation of $h$:
+    \begin{align*}
+        h(t) = rt + rb \\
+        h(t) = r(t+b)
+    \end{align*}
+    We know that the rate at which the snowplow moves (clears a road) is inversely proportional to the height of the snow:
+    \begin{align*}
+        x'(t) = \frac{\d x}{\d t} \propto \frac{1}{h(t)}
+    \end{align*}
+    Then the product of the two is constant:
+    \begin{align*}
+        x'(t) h(t) &= m, \quad m \in \mathbb{R} \\
+        \iff x'(t) &= \frac{m}{h(t)} \\
+        \iff x'(t) &= \frac{m}{r(t+b)}
+    \end{align*}
+    Since $m$ and $r$ are constants, we can rewrite the equation as follows, separating the constants from the variables and unknowns:
+    \begin{equation*}
+        x'(t) = \frac{m}{r} \frac{1}{(t+b)}
+    \end{equation*}
+
+    % ^ this is a differential equation
+
+    Since we have information about the kilometers the snowplow clears after a known number of hours, let us attempt to find the equation of $x(t)$. For this, we will integrate $x'(t)$:
+    \begin{align*}
+        x(t) &= \int x'(t) \d t \\ 
+        &= \int \frac{m}{r} \frac{1}{(t+b)} \d t \\
+        &= \frac{m}{r} \int \frac{1}{(t+b)} \d t \\
+        &= \frac{m}{r} \ln(t+b) + C_2, \quad C_2 \in \mathbb{R}
+    \end{align*}
+    Note that the product $\frac{m}{r}C_2$ is just a product of constants and thus unnecessary to write.
+    Now using the equation for $x(t)$, we substitute using known information:
+    \begin{itemize}
+        \item The snowplow cleared $2 \unit{\kilo\meter}$ between 9:00 AM and 11:00 AM (the span of two hours):
+        \begin{align*}
+            x(2) - x(0) &= \left.\frac{m}{r}\ln(t+b)\right|^2_0 \\
+            2 &= \left(\frac{m}{r} \ln(2+b)\right) - \left(\frac{m}{r}\ln(0+b)\right) \\
+            2 &= \frac{m}{r} \left(\ln(2+b) - \ln(0+b)\right) \\
+            &\boxed{2 = \frac{m}{r} \ln\left(\frac{2+b}{b}\right)} \numberthis \label{eq:firstunknown}
+        \end{align*}
+        \item The snowplow cleared $1 \unit{\kilo\meter}$ between 11:00 AM (2 hours after it set out) and 1:00 PM (4 hours after it set out):
+        \begin{align*}
+            x(4) - x(2) &= \left.\frac{m}{r}\ln(t+b)\right|^4_2 \\
+            1 &= \left(\frac{m}{r} \ln(4+b)\right) - \left(\frac{m}{r}\ln(2+b)\right) \\
+            1 &= \frac{m}{r} \left(\ln(4+b) - \ln(2+b)\right) \\
+            &\boxed{1 = \frac{m}{r} \ln\left(\frac{4+b}{2+b}\right)} \numberthis \label{eq:secondunknown}
+        \end{align*}
+    \end{itemize}
+
+    We now have two equations with $b$ as our unknown. We shall now try to combine the two and solve for $b$:
+
+    If we multiply \eqref{eq:secondunknown} by 2:
+    \begin{align*}
+        &\left.1 = \frac{m}{r} \ln\left(\frac{4+b}{2+b}\right)\right|\times 2 \\
+        &2 = \frac{m}{r} 2 \ln\left(\frac{4+b}{2+b}\right) \\
+        2 &= \frac{m}{r} \ln\left(\frac{4+b}{2+b}\right)^2 \\
+        &\boxed{\frac{2r}{m} = \ln\left(\frac{4+b}{2+b}\right)^2} \label{eq:thirdunknown} \numberthis
+    \end{align*}
+
+    Then if we solve for the $\ln$ in \eqref{eq:firstunknown}:
+    \begin{align*}
+        &\frac{m}{r} \ln\left(\frac{2+b}{b}\right) = 2 \\
+        &\boxed{\frac{2r}{m} = \ln\left(\frac{2+b}{b}\right)} \numberthis \label{eq:fourthunknown}
+    \end{align*}
+
+    Then, equating the right hand side members of \eqref{eq:thirdunknown} and \eqref{eq:fourthunknown}:
+    \begin{align*}
+        \ln\left(\frac{2+b}{b}\right) &= \ln\left(\frac{4+b}{2+b}\right)^2 \\
+        \frac{2+b}{b} &= \left(\frac{4+b}{2+b}\right)^2 \\
+        \frac{2+b}{b} &= \frac{(4+b)^2}{(2+b)^2} \\
+        (2+b)^3 &= b(4+b)^2 \\
+        b^3 + 6b^2 + 12b + 8 &= b (b^2 + 8b + 16) \\
+        \cancel{b^3} + 6b^2 + 12b + 8 &= \cancel{b^3} + 8b^2 + 16b \\
+         2b^2 +  4b - 8 &= 0 \ \bigg| \div 2 \\ 
+         b^2 + 2b - 4 &= 0 \\
+         \overset{\text{quadratic formula}}{\iff} b_1 = \sqrt{5} - 1 \approx 1.236 &\qquad b_2 = -\sqrt 5 - 1 \approx - 3.236
+    \end{align*}
+
+    Since $b$ is the number of hours before 9:00 AM, the moment at which the snowplow set out to clear the snow, $b$ must be a positive number so $b >0$ and the second solution $b_2$ is rejected.
+
+    In conclusion, it started snowing $1.236$ hours before 9:00 AM. If we want to be specific:
+    \begin{align*}
+        0.236 \textnormal{hours is} 0.236 \cdot 60 = 14.16 \textnormal{minutes} \\
+        0.16 \textnormal{minutes is} 0.16 \cdot 60 = 9.6 \textnormal{seconds}
+    \end{align*}
+    so $1.236$ hours equate to $1$ hour, $14$ minutes and $9.6$ seconds
+    \[
+        9{:}00{:}00 - 1{:}14{:}9.6 = 7{:}45{:}50.4 \textnormal{AM}
+    \]
+   It started snowing at $7{:}45{:}50.4$ AM.
+
+\part{Two Snowplows}
+\section{The Problem}
+\begin{framed}
+    \noindent One morning it began to snow very hard and continued snowing steadily throughout the day. A snowplow set out at 9:00 AM to clear a road, clearing 2 \unit{\kilo\meter} by 11:00 AM. and an additional kilometer by 1:00 PM. At what time did it start snowing?
+\end{framed}
+\section{The Solution}
+
+    
+    
+
+\newpage \printbibliography
+
+\end{document}
