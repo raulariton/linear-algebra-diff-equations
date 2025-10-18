@@ -317,63 +317,88 @@ Now we shall move on to the second part of the project, respectively problem D f
 
             \item The second snowplow left at 2:00 PM.
 
-            If the second snowplow has cleared $y(t)$ kilometers of snow at time $t$, then the first snowplow cleared the same amount of snow at time $\tau$\footnote{ We use $\tau$ purely for notation purposes, its true value is out of the scope for this exercise.}, $\tau \in \mathbb{R^+}, \ \tau < t$.
+            \textbf{If the second snowplow has cleared $y(t)$ kilometers of snow at time $t$, then the first snowplow cleared the same amount of snow at time $\tau$, $\tau \in \mathbb{R^+}, \ \tau < t$.}
 
             \begin{align*}
                 y(t) &= x(\tau) \\
                 y(t) &= A \ln \tau
             \end{align*}
 
-            Solving for $\tau$, so we can substitute it to have less unknowns in our expressions:
+            Solving for $\tau$, so we can substitute it to have less unknowns in our expressions later on:
+            \begin{gather*}
+                \ln \tau = \frac{y(t)}{A} \\
+                \tau = e^{\frac{y(t)}{A}}
+            \end{gather*}
 
-            \begin{align*}
-                \ln \tau &= \frac{y(t)}{A} \\
-                \tau &= e^{\frac{y(t)}{A}}
-            \end{align*}
+            \textbf{The height of snow that the second snowplow must clear at time $t$ is the snow that has fallen since the first snowplow has passed, time equal to $t - \tau$.} And since the rate of snowfall is constant ($r$), the height of the snow that has fallen during \(t-\tau\) hours is equal to \(r \cdot (t - \tau)\).
 
-            The height of snow that the second snowplow must clear at time $t$ is the snow that has fallen since the first snowplow has passed, time equal to $t - \tau$. And since the rate of snowfall is constant ($r$), the height of the snow that has fallen during \(t-\tau\) hours is equal to \(r \cdot (t - \tau)\).
-
-            \begin{align*}
-                y'(t) \cdot h(t) &= k \\
-                y'(t) \cdot r(t-\tau) &= k \\
-                \intertext{replacing $\tau$ with \(e^{\frac{y(t)}{A}}\) we obtain}
-                y'(t) &= \frac{k}{r(t-e^{\frac{y(t)}{A}})}
-                \intertext{and denoting \(\frac{k}{r}\) with \(A\):}
-                y'(t) &= \frac{A}{t - e^{\frac{y(t)}{A}}}
-                \intertext{which is a \textbf{first-order linear differential equation} with \(y\) as the dependent variable, and \(t\) as the independent variable. We must solve it to obtain the equation of \(y(x)\).}
-                \frac{\d y}{\d t} &= \frac{A}{t - e^{\frac{y}{A}}} \\
-                \intertext{\cite{Kent_Nagle2018-ig} hints to setting \(t\) as the dependent variable and \(y\) as the independent variable. This way we will obtain \(t(y)\) (\emph{the moment in time $t$ that the second snowplow has cleared $y$ kilometers of snow}).}
-                \frac{\mathrm{d}t}{\mathrm{d}y} &= \frac{1}{\mathrm{d}y / \mathrm{d}t} = \frac{t - e^{\frac{y}{A}}}{A}
-                \intertext{Since this is a first-order linear differential equation, we shall solve it using the integrating factor. We bring the differential equation into standard form \(\frac{\d t}{\d y} + P(y)t = Q(y)\)}
-                \frac{\d t}{\d y} &= \frac{t - e^{\frac{y}{A}}}{A} \\
-                \frac{\d t}{\d y} &= \frac{t}{A} - \frac{e^{\frac{y}{A}}}{A} \\
-                \frac{\d t}{\d y} - \frac{1}{A}t &= - \frac{e^{\frac{y}{A}}}{A}
-                \intertext{The integrating factor \(\mu(y)\) is equal to:}
-                \mu(y) &= e^{\int P(y) \d y} \\
-                \mu(y) &= e^{\int -\frac{1}{A} \d y} \\
-                \mu(y) &= e^{-\frac{y}{A}}
-                \intertext{Now, we multiply both sides of the differential equation with the integrating factor:}
-                \frac{\d t}{\d y} - \frac{1}{A}t &= - \frac{e^{\frac{y}{A}}}{A} \Bigg| \times e^{-\frac{y}{A}} \\
-                e^{-\frac{y}{A}} \frac{\d t}{\d y} - e^{-\frac{y}{A}} \frac{1}{A} t &= \frac{-e^{\frac{y}{A}} \cdot e^{-\frac{y}{A}}}{A} \\
-                e^{-\frac{y}{A}} \frac{\d t}{\d y} - e^{-\frac{y}{A}} \frac{1}{A} t &= - \frac{1}{A}
-                \intertext{If we write the equation replacing \(\frac{\d t}{\d y}\) with \(t'\), we notice that the left hand side resembles the product derivation rule:}
-                \underbrace{e^{-\frac{y}{A}} t' - e^{-\frac{y}{A}} \frac{1}{A} t} &= - \frac{1}{A} \\
-                e^{-\frac{y}{A}} t' - e^{-\frac{y}{A}} \frac{1}{A} t \equiv (e^{-\frac{y}{A}})t' &+ (e^{-\frac{y}{A}})'t \equiv (t \cdot e^{-\frac{y}{A}})' \equiv \frac{\d \left(t \cdot e^{-\frac{y}{A}}\right)}{\d y}
-                \intertext{So, we have}
-                \frac{\d \left(t \cdot e^{-\frac{y}{A}}\right)}{\d y} &= -\frac{1}{A}
-                \intertext{and we integrate both sides with respect to \(y\):}
-                \int\frac{\d \left(t \cdot e^{-\frac{y}{A}}\right)} \d y &= \int -\frac{1}{A} \d y \\
-                \left(t \cdot e^{-\frac{y}{A}}\right) &= -\frac{y}{A} + C, \quad C \in \mathbb{R}
-                \intertext{Solving for \(t\) we get the formula for \(t(y)\)}
-                t(y) = \frac{1}{e^{-\frac{y}{A}}}\left(C-\frac{y}{A}\right) &= e^\frac{y}{A}\left(C - \frac{y}{A}\right) \numberthis \label{eq:t(y)_initial}
-                \intertext{At 2:00 PM, $t = 2$ hours after 12:00, the second snowplow has cleared $y = 0$ kilometers of snow, thus}
-                t(0) &= 2 \\
-                e^{\frac{0}{A}}\left(C - \frac{0}{A}\right) &= 2 \\
-                e^0 \left(C - 0\right) &= 2 \\
-                C &= 2
-                \intertext{So, finally, we have the formula for \(t(y)\)}
-                t(y) &= e^\frac{y}{A}\left(2-\frac{y}{A}\right) \numberthis \label{eq:t(y)}
-            \end{align*}
+            \begin{gather*}
+                y'(t) \cdot h(t) = k \\
+                y'(t) \cdot r(t-\tau) = k \\
+            \end{gather*}
+            replacing $\tau$ with \(e^{\frac{y(t)}{A}}\) we obtain
+            \begin{gather*}
+                y'(t) = \frac{k}{r(t-e^{\frac{y(t)}{A}})}
+            \end{gather*}
+            and denoting \(\frac{k}{r}\) with \(A\):
+            \begin{gather*}
+                y'(t) = \frac{A}{t - e^{\frac{y(t)}{A}}}
+            \end{gather*}
+            which is a \textbf{first-order linear differential equation} with \(y\) as the dependent variable, and \(t\) as the independent variable. We must solve it to obtain the equation of \(y(x)\).
+            \begin{gather*}
+                \frac{\d y}{\d t} = \frac{A}{t - e^{\frac{y}{A}}} \\
+            \end{gather*}
+            \cite{Kent_Nagle2018-ig} hints to setting \(t\) as the dependent variable and \(y\) as the independent variable. This way we will obtain \(t(y)\) (\emph{the moment in time $t$ that the second snowplow has cleared $y$ kilometers of snow}).
+            \begin{gather*}
+                \frac{\mathrm{d}t}{\mathrm{d}y} = \frac{1}{\mathrm{d}y / \mathrm{d}t} = \frac{t - e^{\frac{y}{A}}}{A}
+            \end{gather*}
+            Since this is a first-order linear differential equation, we shall solve it using the integrating factor. We bring the differential equation into standard form \(\frac{\d t}{\d y} + P(y)t = Q(y)\)
+            \begin{gather*}
+                \frac{\d t}{\d y} = \frac{t - e^{\frac{y}{A}}}{A} \\
+                \frac{\d t}{\d y} = \frac{t}{A} - \frac{e^{\frac{y}{A}}}{A} \\
+                \frac{\d t}{\d y} - \frac{1}{A}t = - \frac{e^{\frac{y}{A}}}{A}
+            \end{gather*}
+            The integrating factor \(\mu(y)\) is equal to:
+            \begin{gather*}
+                \mu(y) = e^{\int P(y) \d y} \\
+                \mu(y) = e^{\int -\frac{1}{A} \d y} \\
+                \mu(y) = e^{-\frac{y}{A}}
+            \end{gather*}
+            Now, we multiply both sides of the differential equation with the integrating factor:
+            \begin{gather*}
+                \frac{\d t}{\d y} - \frac{1}{A}t = - \frac{e^{\frac{y}{A}}}{A} \Bigg| \times e^{-\frac{y}{A}} \\
+                e^{-\frac{y}{A}} \frac{\d t}{\d y} - e^{-\frac{y}{A}} \frac{1}{A} t = \frac{-e^{\frac{y}{A}} \cdot e^{-\frac{y}{A}}}{A} \\
+                e^{-\frac{y}{A}} \frac{\d t}{\d y} - e^{-\frac{y}{A}} \frac{1}{A} t = - \frac{1}{A}
+            \end{gather*}
+            If we write the equation replacing \(\frac{\d t}{\d y}\) with \(t'\), we notice that the left hand side resembles the product derivation rule:
+            \begin{gather*}
+                \underbrace{e^{-\frac{y}{A}} t' - e^{-\frac{y}{A}} \frac{1}{A} t} = - \frac{1}{A} \\
+                e^{-\frac{y}{A}} t' - e^{-\frac{y}{A}} \frac{1}{A} t \equiv (e^{-\frac{y}{A}})t' + (e^{-\frac{y}{A}})'t \equiv (t \cdot e^{-\frac{y}{A}})' \equiv \frac{\d \left(t \cdot e^{-\frac{y}{A}}\right)}{\d y}
+            \end{gather*}
+            So, we have
+            \begin{gather*}
+                \frac{\d \left(t \cdot e^{-\frac{y}{A}}\right)}{\d y} = -\frac{1}{A}
+            \end{gather*}
+            and we integrate both sides with respect to \(y\):
+            \begin{gather*}
+                \int\frac{\d \left(t \cdot e^{-\frac{y}{A}}\right)} \d y = \int -\frac{1}{A} \d y \\
+                \left(t \cdot e^{-\frac{y}{A}}\right) = -\frac{y}{A} + C, \quad C \in \mathbb{R}
+            \end{gather*}
+            Solving for \(t\) we get the formula for \(t(y)\):
+            \begin{gather*}
+                t(y) = \frac{1}{e^{-\frac{y}{A}}}\left(C-\frac{y}{A}\right) = e^\frac{y}{A}\left(C - \frac{y}{A}\right) \numberthis \label{eq:t(y)_initial}
+            \end{gather*}
+            At 2:00 PM, $t = 2$ hours after 12:00, the second snowplow has cleared $y = 0$ kilometers of snow, thus
+            \begin{gather*}
+                t(0) = 2 \\
+                e^{\frac{0}{A}}\left(C - \frac{0}{A}\right) = 2 \\
+                e^0 \left(C - 0\right) = 2 \\
+                C = 2
+            \end{gather*}
+            So, finally, we have the formula for \(t(y)\):
+            \begin{gather*}
+                t(y) = e^\frac{y}{A}\left(2-\frac{y}{A}\right) \numberthis \label{eq:t(y)}
+            \end{gather*}
         \end{itemize}
 
         Now that we have the equations \eqref{eq:x(t)}, \eqref{eq:t(y)} for \(x(t)\) and \(t(y)\) respectively, we shall combine them.
@@ -412,7 +437,7 @@ Now we shall move on to the second part of the project, respectively problem D f
 
         \hfill \break
         Formulas remain the same, except for the constant \(C\) in the initial equation of \(t(y)\) (equation \eqref{eq:t(y)_initial}).
-        The second snowplow clears \(0\) kilometers of snow at  $t$ hours after noon at which it gets dispatched, so
+        The second snowplow clears \(0\) kilometers of snow at \(t = 3\) hours after noon at which it gets dispatched, so
         \begin{gather*}
             t(0) = 3 \\
             e^{\frac{0}{A}}\left(C - \frac{0}{A}\right) = 3 \\
