@@ -27,6 +27,8 @@
             ]{biblatex}
 \addbibresource{bibliography.bib}
 
+\usepackage{cancel}
+
 % context-sensitive quotes package (biblatex suggests using it, idk what it does exactly)
 \usepackage{csquotes}
 
@@ -78,9 +80,9 @@
 
 \tableofcontents \newpage
 
-\part{The Snowplow Problem}
-\section{Introduction to the problem}
-    Firstly, we shall introduce the problem, as described in \cite{nagle2012fundamentals}. Note that for practicality, we have decided to use kilometers instead of miles.
+\part{The Snowplow Problem} \label{firstpart}
+\section{Problem}
+    Firstly, we shall introduce the problem, as described in \cite[pp.~84--85]{Kent_Nagle2018-ig}. Note that for practicality, we have decided to use kilometers instead of miles.
 
     \begin{framed}
         \noindent One morning it began to snow very hard and continued snowing steadily throughout the day. A snowplow set out at 9:00 AM to clear a road, clearing 2 \unit{\kilo\meter} by 11:00 AM. and an additional kilometer by 1:00 PM. At what time did it start snowing?
@@ -216,13 +218,222 @@
    It started snowing at $7{:}45{:}50.4$ AM.
 
 \part{Two Snowplows}
-\section{The Problem}
+Now we shall move on to the second part of the project, respectively problem D from \cite[pp.~84--85]{Kent_Nagle2018-ig}
+\section{Problems}
 \begin{framed}
-    \noindent One morning it began to snow very hard and continued snowing steadily throughout the day. A snowplow set out at 9:00 AM to clear a road, clearing 2 \unit{\kilo\meter} by 11:00 AM. and an additional kilometer by 1:00 PM. At what time did it start snowing?
+    One day it began to snow exactly at noon at a heavy and steady rate. A snowplow left its garage at 1:00 PM., and another one followed in its tracks at 2:00 PM.
 \end{framed}
-\section{The Solution}
+    \subsection{First subpoint}
+        \begin{framed}
+            At what time did the second snowplow crash into the first?
+        \end{framed}
+        We keep the same assumption as part \ref{firstpart}:
+        \begin{itemize}
+            \item The rate at which a snowplow can clear a road is inversely proportional to the height (or depth) of the snow, and thus to the time elapsed since the road was clear of snow.
+        \end{itemize}
+    \subsection{Second subpoint}
+        \begin{framed}
+            Could the crash have been avoided by dispatching the second snowplow at 3:00 PM instead?
+        \end{framed}
+\section{Solutions}
+    \subsection{Time of crash}
+        We consider the following notations:
+        \begin{itemize}
+            \item $t$ - time since noon (12:00 PM) (hours)
+            \item $r$ - rate of snowfall (cm/h)
+            \item $x(t)$ - the distance that the first snowplow has travelled ($\unit{\kilo\meter}$) at time $t$
+            \item $y(t)$ - the distance that the second snowplow has travelled ($\unit{\kilo\meter}$) at time $t$
+            \item $h(t)$ - the height of snow ($\unit{\centi\meter}$) at time $t$
+        \end{itemize}
 
-    
+        The time of the crash is the moment in time $t$ such that
+        \[
+            x(t) = y(t)
+        \]
+
+        Firstly, we must determine the equations $x(t)$ and $y(t)$.
+        
+        \hfill \break
+        Since the rate at which a snowplow can clear a road is inversely proportional to the height (or depth) of the snow, the product of the speed (\textit{the derivative $x'(t) \textnormal{or} y'(t)$ of the position $x(t) \textnormal{or} y(t)$}) of any of the two snowplows with the height $h(t)$ of the snow is constant, and we shall denote it with $k$:
+        \begin{align*}
+           & x'(t) \cdot h(t) = k, \quad k \in \mathbb{R} \\
+            &y'(t) \cdot h(t) = k
+        \end{align*}
+
+        The rate at which it is snowing is steady i.e. constant, thus $h(t)$ is a linear function with slope $r$ and equation
+        \begin{gather*}
+            h(t) = rt + C, \quad C \in \mathbb{R}
+        \end{gather*}
+
+        Since it began snowing at noon (12:00 PM), which we consider our starting time $t = 0$
+
+        \begin{gather*}
+            h(0) = 0 \\
+            r \cdot 0 + C = 0 \\
+            \boxed{C = 0}
+        \end{gather*}
+
+        So, $h(t)$ becomes
+
+        \begin{equation*}
+            h(t) = rt
+        \end{equation*}
+
+        and the proportionality equation for the first snowplow becomes:
+
+        \begin{gather*}
+            x'(t) \cdot rt = k \\x'(t) = \frac{k}{rt}
+        \end{gather*}
+
+        Let us denote the fraction of the two constants $\frac{k}{r}$ with $A$:
+
+        \begin{gather*}
+            x'(t) = \frac{A}{t}
+        \end{gather*}
+
+        We're getting closer to finding the equations $x(t)$ and $y(t)$.
+
+        \hfill \break
+        Let us integrate $x(t)$:
+        \begin{align*}
+            \int x'(t) \d t &= \int{\frac{A}{t}} \d t \\
+            x(t) &= A \ln |t|+C \\
+            t \geq 0 \implies x(t) &= A \ln t + C
+        \end{align*}
+        
+        Let us use our given information:
+        \begin{itemize}
+            \item The first snowplow leaves the garage at 1:00 PM, 1 hour after noon (12:00 PM), so
+                \begin{gather*}
+                    x(1) = 0 \\
+                    A \ln 1 +C = 0 \\
+                    C = 0
+                \end{gather*}
+                and $x(t)$ becomes
+                \begin{equation}
+                    x(t) = A \ln t
+                    \label{eq:x(t)}
+                \end{equation}
+
+            \item The second snowplow left at 2:00 PM.
+
+            If the second snowplow has cleared $y(t)$ kilometers of snow at time $t$, then the first snowplow cleared the same amount of snow at time $\tau$\footnote{ We use $\tau$ purely for notation purposes, its true value is out of the scope for this exercise.}, $\tau \in \mathbb{R^+}, \ \tau < t$.
+
+            \begin{align*}
+                y(t) &= x(\tau) \\
+                y(t) &= A \ln \tau
+            \end{align*}
+
+            Solving for $\tau$, so we can substitute it to have less unknowns in our expressions:
+
+            \begin{align*}
+                \ln \tau &= \frac{y(t)}{A} \\
+                \tau &= e^{\frac{y(t)}{A}}
+            \end{align*}
+
+            The height of snow that the second snowplow must clear at time $t$ is the snow that has fallen since the first snowplow has passed, time equal to $t - \tau$. And since the rate of snowfall is constant ($r$), the height of the snow that has fallen during \(t-\tau\) hours is equal to \(r \cdot (t - \tau)\).
+
+            \begin{align*}
+                y'(t) \cdot h(t) &= k \\
+                y'(t) \cdot r(t-\tau) &= k \\
+                \intertext{replacing $\tau$ with \(e^{\frac{y(t)}{A}}\) we obtain}
+                y'(t) &= \frac{k}{r(t-e^{\frac{y(t)}{A}})}
+                \intertext{and denoting \(\frac{k}{r}\) with \(A\):}
+                y'(t) &= \frac{A}{t - e^{\frac{y(t)}{A}}}
+                \intertext{which is a \textbf{first-order linear differential equation} with \(y\) as the dependent variable, and \(t\) as the independent variable. We must solve it to obtain the equation of \(y(x)\).}
+                \frac{\d y}{\d t} &= \frac{A}{t - e^{\frac{y}{A}}} \\
+                \intertext{\cite{Kent_Nagle2018-ig} hints to setting \(t\) as the dependent variable and \(y\) as the independent variable. This way we will obtain \(t(y)\) (\emph{the moment in time $t$ that the second snowplow has cleared $y$ kilometers of snow}).}
+                \frac{\mathrm{d}t}{\mathrm{d}y} &= \frac{1}{\mathrm{d}y / \mathrm{d}t} = \frac{t - e^{\frac{y}{A}}}{A}
+                \intertext{Since this is a first-order linear differential equation, we shall solve it using the integrating factor. We bring the differential equation into standard form \(\frac{\d t}{\d y} + P(y)t = Q(y)\)}
+                \frac{\d t}{\d y} &= \frac{t - e^{\frac{y}{A}}}{A} \\
+                \frac{\d t}{\d y} &= \frac{t}{A} - \frac{e^{\frac{y}{A}}}{A} \\
+                \frac{\d t}{\d y} - \frac{1}{A}t &= - \frac{e^{\frac{y}{A}}}{A}
+                \intertext{The integrating factor \(\mu(y)\) is equal to:}
+                \mu(y) &= e^{\int P(y) \d y} \\
+                \mu(y) &= e^{\int -\frac{1}{A} \d y} \\
+                \mu(y) &= e^{-\frac{y}{A}}
+                \intertext{Now, we multiply both sides of the differential equation with the integrating factor:}
+                \frac{\d t}{\d y} - \frac{1}{A}t &= - \frac{e^{\frac{y}{A}}}{A} \Bigg| \times e^{-\frac{y}{A}} \\
+                e^{-\frac{y}{A}} \frac{\d t}{\d y} - e^{-\frac{y}{A}} \frac{1}{A} t &= \frac{-e^{\frac{y}{A}} \cdot e^{-\frac{y}{A}}}{A} \\
+                e^{-\frac{y}{A}} \frac{\d t}{\d y} - e^{-\frac{y}{A}} \frac{1}{A} t &= - \frac{1}{A}
+                \intertext{If we write the equation replacing \(\frac{\d t}{\d y}\) with \(t'\), we notice that the left hand side resembles the product derivation rule:}
+                \underbrace{e^{-\frac{y}{A}} t' - e^{-\frac{y}{A}} \frac{1}{A} t} &= - \frac{1}{A} \\
+                e^{-\frac{y}{A}} t' - e^{-\frac{y}{A}} \frac{1}{A} t \equiv (e^{-\frac{y}{A}})t' &+ (e^{-\frac{y}{A}})'t \equiv (t \cdot e^{-\frac{y}{A}})' \equiv \frac{\d \left(t \cdot e^{-\frac{y}{A}}\right)}{\d y}
+                \intertext{So, we have}
+                \frac{\d \left(t \cdot e^{-\frac{y}{A}}\right)}{\d y} &= -\frac{1}{A}
+                \intertext{and we integrate both sides with respect to \(y\):}
+                \int\frac{\d \left(t \cdot e^{-\frac{y}{A}}\right)} \d y &= \int -\frac{1}{A} \d y \\
+                \left(t \cdot e^{-\frac{y}{A}}\right) &= -\frac{y}{A} + C, \quad C \in \mathbb{R}
+                \intertext{Solving for \(t\) we get the formula for \(t(y)\)}
+                t(y) = \frac{1}{e^{-\frac{y}{A}}}\left(C-\frac{y}{A}\right) &= e^\frac{y}{A}\left(C - \frac{y}{A}\right) \numberthis \label{eq:t(y)_initial}
+                \intertext{At 2:00 PM, $t = 2$ hours after 12:00, the second snowplow has cleared $y = 0$ kilometers of snow, thus}
+                t(0) &= 2 \\
+                e^{\frac{0}{A}}\left(C - \frac{0}{A}\right) &= 2 \\
+                e^0 \left(C - 0\right) &= 2 \\
+                C &= 2
+                \intertext{So, finally, we have the formula for \(t(y)\)}
+                t(y) &= e^\frac{y}{A}\left(2-\frac{y}{A}\right) \numberthis \label{eq:t(y)}
+            \end{align*}
+        \end{itemize}
+
+        Now that we have the equations \eqref{eq:x(t)}, \eqref{eq:t(y)} for \(x(t)\) and \(t(y)\) respectively, we shall combine them.
+
+        \hfill \break
+        As we mentioned, the snowplows collide when
+        \begin{equation*}
+            y = x = A \ln t
+        \end{equation*}
+        By substituting $y$ in equation \eqref{eq:t(y)} and solving for \(t\), we obtain
+        \begin{gather*}
+            t = e^\frac{y}{A}\left(2-\frac{y}{A}\right) \\
+            t = e^\frac{A \ln t}{A}\left(2-\frac{A \ln t}{A}\right) \\
+            t = e^{\ln t}\left(2 - \ln t\right) \\
+            t = t (2-\ln t) \Bigg | \div t, \ \ t > 0 \\ 
+            2-\ln t = 1 \\
+            \ln t = 1 \\
+            e^{\ln t} = e^1 \\
+            \boxed{t = e}
+        \end{gather*}
+
+        In conclusion, the two snowplows crashed into one another \(e \approx 2.718\) hours after 12:00 PM (noon). If we want to be specific:
+        \begin{gather*}
+            0.718 \textnormal{hours is} 0.718 \cdot 60 = 43.08 \textnormal{minutes} \\
+            0.08 \textnormal{minutes is} 0.08 \cdot 60 = 4.8 \textnormal{seconds}
+        \end{gather*}
+
+        So \(e\) hours equate to 2 hours, 43 minutes and 4.8 seconds
+        \[
+            12{:}00{:}00 + 2{:}43{:}4.8 = 14{:}43{:}4.8 = 2{:}43{:}4.8 \textnormal{PM}
+        \]
+        The second snowplow crashed into the first at \(2{:}43{:}4.8 \text{ PM}\)\footnote{Note that because of the irrationality of Euler's number \(e\), the number of seconds might be slightly inaccurate.}.
+        
+    \subsection{Preventing the crash}
+        Could the crash be prevented by dispatching the second snowplow at 3:00 PM?
+
+        \hfill \break
+        Formulas remain the same, except for the constant \(C\) in the initial equation of \(t(y)\) (equation \eqref{eq:t(y)_initial}).
+        The second snowplow clears \(0\) kilometers of snow at  $t$ hours after noon at which it gets dispatched, so
+        \begin{gather*}
+            t(0) = 3 \\
+            e^{\frac{0}{A}}\left(C - \frac{0}{A}\right) = 3 \\
+            C = 3
+        \end{gather*}
+
+        Using the same method as before to find the value of \(t\) for when the two snowplows crash, we get
+        \begin{gather*}
+            t = e^{\frac{y}{A}}\left(3-\frac{y}{A}\right) \\
+            t = e^\frac{A \ln t}{A}\left(3 - \frac{A \ln t}{A}\right) \\
+            t = t(3 - \ln t) \\
+            1 = 3 - \ln t \\
+            t = e^2 \approx 5.436
+        \end{gather*}
+
+        In conclusion, if the first snowplow does not finish its course (or at least deviate from it) by $e^2$ hours after noon, then a crash would still happen.
+
+        \hfill \break
+        As a matter of fact, for an arbitrary number $T, \ T > 1$ of hours after noon at which the second snowplow would begin its course, the crash will happen
+        \[ t = e^{T-1} \]
+        hours after noon. Meaning, as long as there is no change in speed, rate of snowfall or the trail that the snowplows follow, \emph{there will always be a crash}.
     
 
 \newpage \printbibliography
