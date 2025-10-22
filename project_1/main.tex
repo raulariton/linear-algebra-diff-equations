@@ -85,7 +85,7 @@
     Firstly, we shall introduce the problem, as described in \cite[pp.~84--85]{Kent_Nagle2018-ig}. Note that for practicality, we have decided to use kilometers instead of miles.
 
     \begin{framed}
-        \noindent One morning it began to snow very hard and continued snowing steadily throughout the day. A snowplow set out at 9:00 AM to clear a road, clearing 2 \unit{\kilo\meter} by 11:00 AM. and an additional kilometer by 1:00 PM. At what time did it start snowing?
+        \noindent One morning it began to snow very hard and continued snowing steadily throughout the day. A snowplow set out at 9:00 AM to clear a road, clearing 2 \unit{\kilo\meter} by 11:00 AM and an additional kilometer by 1:00 PM. At what time did it start snowing?
     \end{framed}
     % image, tikZ plot ? :)
     
@@ -98,20 +98,20 @@
 \section{Solution}
     We shall now begin the attempt at solving the problem. 
 
-    \noindent Let us consider the following notations:
+    \noindent Let us consider the following notation:
     \begin{itemize}
-        \item $t$ - time since 9:00 AM (hours)
-        \item $x(t)$ - the distance that the snowplow has travelled ($\unit{\kilo\meter}$) at time $t$
+        \item $t$ - time since it started snowing (hours)
+        \item $x(t)$ - the distance that the snowplow has traveled ($\unit{\kilo\meter}$) at time $t$
         \item $h(t)$ - the height of the snow ($\unit{\centi\meter}$) at time $t$
     \end{itemize}
     Additionally:
     \begin{itemize}
-        \item b - the number of hours before 9:00 AM when it started snowing
+        \item b - the number of hours that passed from when it started snowing until 9:00 AM
         \item r - rate of snowfall ($\unit{\centi\meter / h}$)
     \end{itemize}
 
-    Since it is snowing at a constant rate, the height of the snow $h$ is increasing at a constant rate. Mathematically this means that the derivative of $h$ is constant, and equal to $r$, $r \in \mathbb{R}$.
-
+    Since it is snowing at a constant rate, the height of the snow $h$ is increasing at a constant rate $r$, proportional to the time that passed. Mathematically this means that the derivative of $h$ is constant, and equal to $r$, $r \in \mathbb{R}$.
+    
     \begin{align*}
         h'(t) = \frac{\d h}{\d t} = r
     \end{align*}
@@ -121,30 +121,31 @@
         h(t) = r t+ C, \quad C \in \mathbb{R}
     \end{align*}
     That's a lot of letters and unknowns. Let us attempt to substitute the constant $C$ in the equation of $h(t)$ with something more relevant to our problem.
-    We consider $t = 0$ the moment that the snowplow sets out to clear the road. Similarly, $t = 0-b$ is the moment that it starts snowing, and the height of the snow is equal to $0$.
+    We consider $t = 0$ the moment that it starts snowing, and the height of the snow is equal to $0$. Similarly, $t = 0+b$ is the moment that the snowplow sets out to clear the road.
+    
     \begin{align*}
-        &h(0-b) = r (0-b) + C \\
-        &0 = -rb + C \\
-        &\boxed{C = rb}
+        &h(0) = r (0) + C \\
+        &0 = 0 + C \\
+        &\boxed{C = 0}
     \end{align*}
     And now we can substitute $C$ in the equation of $h$:
     \begin{align*}
-        h(t) = rt + rb \\
-        h(t) = r(t+b)
+        h(t) = rt 
     \end{align*}
     We know that the rate at which the snowplow moves (clears a road) is inversely proportional to the height of the snow:
     \begin{align*}
         x'(t) = \frac{\d x}{\d t} \propto \frac{1}{h(t)}
     \end{align*}
+    
     Then the product of the two is constant:
     \begin{align*}
         x'(t) h(t) &= m, \quad m \in \mathbb{R} \\
         \iff x'(t) &= \frac{m}{h(t)} \\
-        \iff x'(t) &= \frac{m}{r(t+b)}
+        \iff x'(t) &= \frac{m}{rt}
     \end{align*}
     Since $m$ and $r$ are constants, we can rewrite the equation as follows, separating the constants from the variables and unknowns:
     \begin{equation*}
-        x'(t) = \frac{m}{r} \frac{1}{(t+b)}
+        x'(t) = \frac{m}{r} \frac{1}{t}
     \end{equation*}
 
     % ^ this is a differential equation
@@ -152,30 +153,36 @@
     Since we have information about the kilometers the snowplow clears after a known number of hours, let us attempt to find the equation of $x(t)$. For this, we will integrate $x'(t)$:
     \begin{align*}
         x(t) &= \int x'(t) \d t \\ 
-        &= \int \frac{m}{r} \frac{1}{(t+b)} \d t \\
-        &= \frac{m}{r} \int \frac{1}{(t+b)} \d t \\
-        &= \frac{m}{r} \ln(t+b) + C_2, \quad C_2 \in \mathbb{R}
+        &= \int \frac{m}{r} \frac{1}{t} \d t \\
+        &= \frac{m}{r} \int \frac{1}{t} \d t \\
+        &= \frac{m}{r} \ln(t) + C_1, \quad C_1 \in \mathbb{R}
     \end{align*}
-    Note that the product $\frac{m}{r}C_2$ is just a product of constants and thus unnecessary to write.
+    
+    Note that the product $\frac{m}{r}C_1$ is just a product of constants and thus unnecessary to write.
     Now using the equation for $x(t)$, we substitute using known information:
     \begin{itemize}
-        \item The snowplow cleared $2 \unit{\kilo\meter}$ between 9:00 AM and 11:00 AM (the span of two hours):
+        \item The snowplow cleared $2 \unit{\kilo\meter}$ between 9:00 AM ($t_1$) and 11:00 AM ($t_2$) (the span of two hours):
         \begin{align*}
-            x(2) - x(0) &= \left.\frac{m}{r}\ln(t+b)\right|^2_0 \\
-            2 &= \left(\frac{m}{r} \ln(2+b)\right) - \left(\frac{m}{r}\ln(0+b)\right) \\
-            2 &= \frac{m}{r} \left(\ln(2+b) - \ln(0+b)\right) \\
-            &\boxed{2 = \frac{m}{r} \ln\left(\frac{2+b}{b}\right)} \numberthis \label{eq:firstunknown}
+            x(t_2) - x(t_1) &= \left.\frac{m}{r}\ln(t)\right|_{t_1}^{t_2}\\
+            2 &= \left(\frac{m}{r} \ln(t_2)\right) - \left(\frac{m}{r}\ln(t_1)\right) \\
+            2 &= \frac{m}{r} \left(\ln(t_2) - \ln(t_1)\right) \\
+            2 &= \frac{m}{r} \ln\left(\frac{t_2}
+            {t_1}\right) \\
+            &\boxed{2 = \frac{m}{r} \ln\left(\frac{b+2}{b}\right)} \numberthis \label{eq:firstunknown}
         \end{align*}
-        \item The snowplow cleared $1 \unit{\kilo\meter}$ between 11:00 AM (2 hours after it set out) and 1:00 PM (4 hours after it set out):
+        
+        \item The snowplow cleared $1 \unit{\kilo\meter}$ between 11:00 AM ($t_2$) and 1:00 PM ($t_3$):
         \begin{align*}
-            x(4) - x(2) &= \left.\frac{m}{r}\ln(t+b)\right|^4_2 \\
-            1 &= \left(\frac{m}{r} \ln(4+b)\right) - \left(\frac{m}{r}\ln(2+b)\right) \\
-            1 &= \frac{m}{r} \left(\ln(4+b) - \ln(2+b)\right) \\
+            x(t_3) - x(t_2) &= \left.\frac{m}{r}\ln(t)\right|_{t_2}^{t_3} \\
+            1 &= \left(\frac{m}{r} \ln(t_3)\right) - \left(\frac{m}{r}\ln(t_2)\right) \\
+            1 &= \frac{m}{r} \left(\ln(t_3) - \ln(t_2)\right) \\
+            1 &= \frac{m}{r} \ln\left(\frac{t_3}
+            {t_2}\right) \\
             &\boxed{1 = \frac{m}{r} \ln\left(\frac{4+b}{2+b}\right)} \numberthis \label{eq:secondunknown}
         \end{align*}
     \end{itemize}
 
-    We now have two equations with $b$ as our unknown. We shall now try to combine the two and solve for $b$:
+    We now have two equations with $b$ as our unknown. We shall try to combine the two and solve for $b$:
 
     If we multiply \eqref{eq:secondunknown} by 2:
     \begin{align*}
@@ -204,7 +211,7 @@
          \overset{\text{quadratic formula}}{\iff} b_1 = \sqrt{5} - 1 \approx 1.236 &\qquad b_2 = -\sqrt 5 - 1 \approx - 3.236
     \end{align*}
 
-    Since $b$ is the number of hours before 9:00 AM, the moment at which the snowplow set out to clear the snow, $b$ must be a positive number so $b >0$ and the second solution $b_2$ is rejected.
+    Since $b$ is the number of hours since it started snowing until the moment at which the snowplow set out to clear the snow (9:00 AM), $b$ must be a positive number so $b >0$ and the second solution $b_2$ is rejected.
 
     In conclusion, it started snowing $1.236$ hours before 9:00 AM. If we want to be specific:
     \begin{align*}
@@ -382,7 +389,7 @@ Now we shall move on to the second part of the project, respectively problem E f
             \end{gather*}
             and we integrate both sides with respect to \(y\):
             \begin{gather*}
-                \int\frac{\d \left(t \cdot e^{-\frac{y}{A}}\right)} \d y = \int -\frac{1}{A} \d y \\
+                \int\frac{\d \left(t \cdot e^{-\frac{y}{A}}\right)} \d y= \int -\frac{1}{A} \d y \\
                 \left(t \cdot e^{-\frac{y}{A}}\right) = -\frac{y}{A} + C, \quad C \in \mathbb{R}
             \end{gather*}
             Solving for \(t\) we get the formula for \(t(y)\):
@@ -396,7 +403,7 @@ Now we shall move on to the second part of the project, respectively problem E f
                 e^0 \left(C - 0\right) = 2 \\
                 C = 2
             \end{gather*}
-            So, finally, we have the formula for \(t(y)\):
+            So, finally, we have the general formula for \(t(y)\):
             \begin{gather*}
                 t(y) = e^\frac{y}{A}\left(2-\frac{y}{A}\right) \numberthis \label{eq:t(y)}
             \end{gather*}
