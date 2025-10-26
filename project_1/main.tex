@@ -124,7 +124,7 @@
     We consider $t = 0$ the moment that it starts snowing, and the height of the snow is equal to $0$. Similarly, $t = 0+b$ is the moment that the snowplow sets out to clear the road.
     
     \begin{align*}
-        &h(0) = r (0) + C \\
+        &h(0) = r \cdot 0 + C \\
         &0 = 0 + C \\
         &\boxed{C = 0}
     \end{align*}
@@ -132,12 +132,7 @@
     \begin{align*}
         h(t) = rt 
     \end{align*}
-    We know that the rate at which the snowplow moves (clears a road) is inversely proportional to the height of the snow:
-    \begin{align*}
-        x'(t) = \frac{\d x}{\d t} \propto \frac{1}{h(t)}
-    \end{align*}
-    
-    Then the product of the two is constant:
+    Since the rate at which the snowplow moves (clears a road) is inversely proportional to the height of the snow, their product is constant (called a \emph{proportionality constant}) and we shall denote it with $m$:
     \begin{align*}
         x'(t) h(t) &= m, \quad m \in \mathbb{R} \\
         \iff x'(t) &= \frac{m}{h(t)} \\
@@ -325,7 +320,7 @@ Now we shall move on to the second part of the project, respectively problem E f
 
             \item The second snowplow left at 2:00 PM.
 
-            \textbf{If the second snowplow has cleared $y(t)$ kilometers of snow at time $t$, then the first snowplow cleared the same amount of snow at time $\tau$, $\tau \in \mathbb{R^+}, \ \tau < t$.}
+            \textbf{If the second snowplow has traveled $y(t)$ kilometers at time $t$, then the first snowplow traveled the same distance at time $\tau$, $\tau \in \mathbb{R^+}, \ \tau < t$.}
 
             \begin{align*}
                 y(t) &= x(\tau) \\
