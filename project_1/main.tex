@@ -2,6 +2,20 @@
 \usepackage[english]{babel}
 \usepackage[utf8]{inputenc}
 \usepackage[T1]{fontenc}
+\usepackage{listings}
+\usepackage{xcolor}
+
+\lstset{
+  language=Python,
+  basicstyle=\ttfamily\small,
+  keywordstyle=\color{blue},
+  stringstyle=\color{orange},
+  commentstyle=\color{gray},
+  numbers=left,
+  numberstyle=\tiny\color{gray},
+  frame=single,
+  breaklines=true,
+}
 
 \usepackage{graphicx}
 
@@ -219,13 +233,86 @@
     \]
    It started snowing at $7{:}45{:}50.4$ AM.
 
+   \begin{figure}[h!]
+       \centering
+         \includegraphics[width=0.9\textwidth]{assets/part_1_graph.png}
+        \caption{Graph of the height of the snow with an arbitrary snowfall rate and the distance cleared by the snowplow}
+   \end{figure}
+
+   We also provide the Python code used to generate the above graph:
+   \begin{lstlisting}
+    import numpy as np
+    import matplotlib.pyplot as plt
+
+    # Times
+    t0 = 7.75   # 7:45 AM (snow starts)
+    t1 = 9.00   # 9:00 AM (plow starts)
+    t_end = 13  # 1:00 PM (end)
+    t = np.linspace(t0, t_end, 400)
+
+
+    r = 1
+    h = r * (t - t0)  # h(t0) = 0
+
+
+    t_11, x_11 = 11, 2
+    k = x_11 / np.log((t_11 - t0) / (t1 - t0))
+
+    # Calcualte x(t)
+    x = np.zeros_like(t)
+    mask = t >= t1
+    x[mask] = k * np.log((t[mask] - t0) / (t1 - t0))
+
+
+
+    t_13, expected_x_13 = 13, 3
+    x_13 = k * np.log((t_13 - t0) / (t1 - t0))
+    print(f"Predicted x(13) = {x_13:.2f} km (expected {expected_x_13} km)")
+
+
+
+
+    plt.figure(figsize=(10, 6))
+    plt.plot(t, h, label="Snow height  h(t) = r.(t - 7.75)", color='royalblue', linewidth=2)
+    plt.plot(t, x, label="Road cleared  x(t)", color='darkorange', linewidth=2)
+
+    # Known cleared points
+    plt.scatter([t1, 11, 13], [0, 2, 3], color='red', zorder=5)
+    plt.text(11, 2.1, "11 AM (2 km)", color='red', fontsize=10)
+    plt.text(13, 3.1, "1 PM (3 km)", color='red', fontsize=10)
+
+
+    plt.axvline(t0, color='gray', linestyle=':', linewidth=1)
+    plt.text(t0 + 0.05, max(h)*0.7, "Snow starts (7:45 AM)", color='gray', fontsize=10, rotation=90, va='center')
+    plt.axvline(t1, color='gray', linestyle='--', linewidth=1)
+    plt.text(t1 + 0.05, max(h)*0.7, "Plow starts (9:00 AM)", color='gray', fontsize=10, rotation=90, va='center')
+
+
+    plt.title("Snow Height and Road Cleared vs Time", fontsize=14)
+    plt.xlabel("Time (hours)", fontsize=12)
+    plt.ylabel("Snow height / Distance cleared [km]", fontsize=12)
+    plt.legend()
+    plt.grid(True, linestyle='--', alpha=0.6)
+    plt.xticks([7.75, 9, 10, 11, 12, 13],
+            ["7:45", "9:00", "10:00", "11:00", "12:00", "13:00"])
+
+    plt.show()
+   \end{lstlisting}
+
+
 \setcounter{section}{0}
+\newpage
 \part{Two Snowplows}
 Now we shall move on to the second part of the project, respectively problem E from \cite[pp.~84--85]{Kent_Nagle2018-ig}
 \section{Problems}
 \begin{framed}
     One day it began to snow exactly at noon at a heavy and steady rate. A snowplow left its garage at 1:00 PM., and another one followed in its tracks at 2:00 PM.
 \end{framed}
+\begin{figure}[h!]
+    \centering
+    \includegraphics[width=0.7\textwidth]{assets/two_snowplows_diagram.png}
+    \caption{Two snowplows following the same path}
+\end{figure}
     \subsection{First subpoint}
         \begin{framed}
             At what time did the second snowplow crash into the first?
@@ -462,6 +549,14 @@ Now we shall move on to the second part of the project, respectively problem E f
         As a matter of fact, for an arbitrary number $T, \ T > 1$ of hours after noon at which the second snowplow would begin its course, the crash will happen
         \[ t = e^{T-1} \]
         hours after noon. Meaning, as long as there is no change in speed, rate of snowfall or the trail that the snowplows follow, \emph{there will always be a crash}.
+
+        \hfill \break
+        Finally, we provide a graph of the height of the snow with an arbitrary snowfall rate and the distance cleared by the two snowplows. The graph was made using the same Python code as in part \ref{firstpart}, with minor modifications to account for the second snowplow.
+        \begin{figure}[h!]
+            \centering
+            \includegraphics[width=0.9\textwidth]{assets/two_snowplows_graph.png}
+            \caption{Graph of the height of the snow with an arbitrary snowfall rate and the distance cleared by the two snowplows}
+        \end{figure}
     
 
 \newpage \printbibliography
