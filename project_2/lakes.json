@@ -1,0 +1,22 @@
+{
+    "Superior": {
+        "vol": 2900,
+        "outflow": 15
+    },
+    "Michigan": {
+        "vol": 1180,
+        "outflow": 38
+    },
+    "Huron": {
+        "vol": 850,
+        "outflow": 68
+    },
+    "Erie": {
+        "vol": 116,
+        "outflow": 85
+    },
+    "Ontario": {
+        "vol": 393,
+        "outflow": 99
+    }
+}
