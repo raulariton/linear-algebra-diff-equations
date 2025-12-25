@@ -1,6 +1,12 @@
 import numpy as np
 import matplotlib.pyplot as plt
 import matplotlib
+import json
+import os
+import PyQt6
+
+# use pgf to input plots directly in latex
+# comment both lines to show plot in a window instead
 matplotlib.use("pgf")
 plt.rcParams.update({
     "pgf.texsystem": "pdflatex",
@@ -9,54 +15,37 @@ plt.rcParams.update({
     "pgf.rcfonts": False,
 })
 
-data = {
-    "Superior": {
-        "vol": 2900,
-        "outflow": 15
-    },
-    "Michigan": {
-        "vol": 1180,
-        "outflow": 38
-    },
-    "Huron": {
-        "vol": 850,
-        "outflow": 68
-    },
-    "Erie": {
-        "vol": 116,
-        "outflow": 85
-    },
-    "Ontario": {
-        "vol": 393,
-        "outflow": 99
-    }
-}
-
 plt.figure()
 
+# max years to be shown
 t_max = 700  # years
+# number of points on x axis (time) to be computed (500 numbers from 0 to t_max)
 t = np.linspace(0, t_max, 500)
 
-for lake, values in data.items():
-    k = values["outflow"] / values["vol"] # k = Q_out / V
-    P = np.exp(-k * t) * 100 # e^(-kt), in percentage
-    plt.plot(t, P, label=f"Lake {lake}")
+# load data from json
+# use os to get absolute path to the json file
+with open(os.path.join(os.path.dirname(__file__), 'lakes.json'), 'r') as file:
+    data = json.load(file)
+
+    for lake, values in data.items():
+        k = values["outflow"] / values["vol"] # k = Q_out / V
+        P = np.exp(-k * t) * 100 # e^(-kt), in percentage
+        plt.plot(t, P, label=f"Lake {lake}")
 
 # Add horizontal lines for 50% and 5%
-plt.axhline(50, color='blue', linestyle='--', linewidth=1, label="50% remaining")
-plt.axhline(5, color='red', linestyle='--', linewidth=1, label="5% remaining")
-
-# Plot for P_0 = 3 (example: Lake Superior)
-# lake = "Superior"
-# values = data[lake]
-# k = values["outflow"] / values["vol"]
-# P0 = 3
-# P = P0 * np.exp(-k * t)
-# plt.plot(t, P, '--', label=f"{lake} (P_0=3)")
+plt.axhline(50, color='blue', linestyle='--', linewidth=1, label=r"50% remaining")
+plt.axhline(5, color='red', linestyle='--', linewidth=1, label=r"5% remaining")
 
 plt.xlabel("Time (years)")
 plt.ylabel("Pollution Concentration (% of initial)")
 plt.legend()
 plt.grid(True)
 plt.tight_layout()
+
+# show plot
+# plt.show()
+
+# save as pgf
 plt.savefig("assets/pollution_decay.pgf")
+
+
