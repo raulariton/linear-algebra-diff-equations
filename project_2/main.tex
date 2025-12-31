@@ -317,7 +317,7 @@ Table~\ref{table:reduce_5_percent_times} shows the computed times to reduce the 
     \label{table:reduce_5_percent_times}
 \end{table}
 
-Figure~\ref{fig:pollution_decay} illustrates the reduction (\emph{decay}) of pollution in each of the Great Lakes over time, assuming clean water inflow. The plot was generated using the \texttt{matplotlib} library in Python.
+Figure~\ref{fig:pollution_decay} illustrates the reduction (\emph{decay}) of pollution in each of the Great Lakes over time, assuming clean water inflow. The plot was generated using the \texttt{matplotlib} library in Python. The code can be found in listing~\ref{lst:pollution-reduction-plot}.
 
 % The plot not only visualizes the timescale of pollution reduction, but also emphasizes the exponential nature of the pollution reduction process, as described by equation~\eqref{eq:concentration_over_time}. It also highlights the differences in time scales among the lakes, which depend on the outflow rate to volume ratio of the lakes. For instance, Lake Superior takes significantly longer to reduce pollution compared to Lake Erie, due to its larger volume and lower outflow rate relative to its size.
 \begin{figure}[H]
@@ -336,5 +336,45 @@ Figure~\ref{fig:pollution_decay} illustrates the reduction (\emph{decay}) of pol
 \end{framed}
 
 \newpage \printbibliography
+
+\newpage \appendix
+\section{Code listings}
+\begin{lstlisting}[caption={Python code used to generate the pollution reduction plot shown in figure~\ref{fig:pollution_decay}},
+                   label={lst:pollution-reduction-plot}]
+import numpy as np
+import matplotlib.pyplot as plt
+import matplotlib
+import json
+
+plt.figure()
+
+# max years to be shown
+t_max = 700  # years
+# number of points on x axis (time) to be computed
+t = np.linspace(0, t_max, 500)
+
+# load lake data from json
+# use os to get absolute path to the json file
+with open('lakes.json'), 'r') as file:
+    data = json.load(file)
+
+    for lake, values in data.items():
+        k = values["outflow"] / values["vol"] # k = Q_out / V
+        P = np.exp(-k * t) * 100 # e^(-kt), in percentage
+        plt.plot(t, P, label=f"Lake {lake}")
+
+# Add horizontal lines for 50% and 5%
+plt.axhline(50, color='blue', linestyle='--', linewidth=1, label=r"50% remaining")
+plt.axhline(5, color='red', linestyle='--', linewidth=1, label=r"5% remaining")
+
+plt.xlabel("Time (years)")
+plt.ylabel("Pollution Concentration (% of initial)")
+plt.legend()
+plt.grid(True)
+plt.tight_layout()
+
+# show plot
+plt.show()
+\end{lstlisting}
 
 \end{document}
