@@ -7,6 +7,8 @@
 \usepackage{pgf}
 \usepackage{float}
 \usepackage{lmodern}
+\usepackage{siunitx}
+\DeclareSIUnit\mile{mi}
 
 % default font selection
 \renewcommand{\familydefault}{\sfdefault}
@@ -111,7 +113,7 @@ In this project, we aim to solve a \textit{compartmental modelling} problem prop
     \label{fig:great_lakes}
 \end{figure}
 
-\citeauthor*{Kent_Nagle2018-ig} model each lake as a tank, containing a liquid (water) dissolved with a pollutant (DDT, phosphorus, mercury).
+\citeauthor*{Kent_Nagle2018-ig} models each lake as a tank, containing a liquid (water) dissolved with a pollutant (DDT, phosphorus, mercury).
 
 The following assumptions are made and maintained for the entirety of the problem:
 \begin{itemize}
@@ -121,9 +123,7 @@ The following assumptions are made and maintained for the entirety of the proble
     \item Pollutants are dissolved in the water and enter or leave by inflow or outflow of water.
 \end{itemize}
 
-We must note that, for practicality, we have decided to use metric system units instead of imperial units, as used in the original problem statement. We have simply replaced the imperial units with their metric equivalents, without altering the numerical values.
-
-\newpage \section{``Draining'' each lake of pollutants}
+\newpage \section{``Draining'' each lake of pollutants} \label{sec:draining_lakes}
 
 \begin{framed}
     \noindent Use the outflow rates given to determine the time it would take to ``drain'' each lake. This gives a lower bound on how long it would take to remove all the pollutants.
@@ -132,16 +132,16 @@ We must note that, for practicality, we have decided to use metric system units 
 \begin{figure}[h!]
     \centering
     \includegraphics[width=\textwidth]{assets/great_lakes_compartmental_model.png}
-    \caption{Compartmental model of the Great Lakes with flow rates ($\unit{\kilo\cubic\meter \per \text{year}}$) and volumes ($\unit{\cubic\kilo\meter}$) \cite{Kent_Nagle2018-ig}}
+    \caption{Compartmental model of the Great Lakes with flow rates ($\unit{\cubic\mile \per \text{year}}$) and volumes ($\unit{\cubic\mile}$) \cite{Kent_Nagle2018-ig}}
     \label{fig:great_lakes_model}
 \end{figure}
 
 It is important to note that, in this context, ``draining'' a lake does not refer to removing all the water from it, but rather to removing all the pollutants dissolved in the water.
 
-Since we are given the outflow rates for each lake (in $\unit{\kilo\cubic\meter \per \text{year}}$) and the volumes of each lake (in $\unit{\cubic\kilo\meter}$) (see figure~\ref{fig:great_lakes_model}), the time (in years) that it would take to drain (remove all pollutants from) each lake can be simply computed as:
+Since we are given the outflow rates for each lake (in $\unit{\cubic\mile \per \text{year}}$) and the volumes of each lake (in $\unit{\cubic\mile}$) (see figure~\ref{fig:great_lakes_model}), the time (in years) that it would take to drain (remove all pollutants from) each lake can be simply computed as:
 \begin{gather*}
     \text{Time to drain lake} = \frac{\text{Volume of lake}}{\text{Outflow rate}} \\
-    t = \frac{V}{Q_{out}}
+    t = \frac{V}{r}
 \end{gather*}
 
 Table~\ref{table:drain_times} shows the computed times to drain each lake, using the given volumes and outflow rates.
@@ -173,7 +173,7 @@ Table~\ref{table:drain_times} shows the computed times to drain each lake, using
 
 \subsection{An additional explanation}
 
-We have assumed that volume of all the lakes remain constant, meaning that the inflow rate \(Q_{out}\) is equal to the outflow rate \(Q_{in}\). To model this problem in an even simpler manner, we can think of each lake as a full cup of water with soda syrup dissolved in it. If we were to place the cup over a sink, and start pouring water into the cup while letting the water-syrup mixture flow out of the cup, we would eventually end up with a cup full of only water, as the syrup would be washed away by the inflowing water. The time it would take to completely wash away the syrup from the cup can be computed by dividing the volume of the cup by the outflow rate. Notice how the volume of the cup remains constant (full).
+We have assumed that volume of all the lakes remain constant, meaning that the inflow rate \(r_{i}\) is equal to the outflow rate \(r\). To model this problem in an even simpler manner, we can think of each lake as a full cup of water with soda syrup dissolved in it. If we were to place the cup over a sink, and start pouring water into the cup while letting the water-syrup mixture flow out of the cup, we would eventually end up with a cup full of only water, as the syrup would be washed away by the inflowing water. The time it would take to completely wash away the syrup from the cup can be computed by dividing the volume of the cup by the outflow rate. Notice how the volume of the cup remains constant (full).
 
 % figure?
 
@@ -185,78 +185,74 @@ We have assumed that volume of all the lakes remain constant, meaning that the i
 
 Let us consider the following notation:
 \begin{itemize}
-    \item \(V\) - volume of the lake ($\unit{\kilo\cubic\meter}$)
-    \item \(Q_{out}\) - outflow rate ($\unit{\kilo\cubic\meter \per \text{year}}$)
-    \item \(C(t)\) - concentration of pollutant in the lake at time \(t\) ($\unit{\kilo\gram / \kilo\cubic\meter}$) (mass per unit volume)
-    \item \(C_0\) - initial concentration of pollutant in the lake at time \(t = 0\) ($\unit{\kilo\gram / \kilo\cubic\meter}$)
-    \item \(M(t)\) - mass of pollutant in the lake at time \(t\) ($\unit{\kilo\gram}$)
+    \item \(V\) - volume of the lake ($\unit{\cubic\mile}$)
+    \item \(r\) - outflow rate ($\unit{\cubic\mile \per \text{year}}$)
+    \item \(C(t)\) - concentration of pollutant in the lake at time \(t\) ($\unit{\kilo\gram / \cubic\mile}$) (mass per unit volume = $\frac{y(t)}{V}$)
+    \item \(C_0\) - initial concentration of pollutant in the lake at time \(t = 0\) ($\unit{\kilo\gram / \cubic\mile}$)
+    \item \(y(t)\) - mass of pollutant in the lake at time \(t\) ($\unit{\kilo\gram}$)
 \end{itemize}
 
 The rate of change of the mass of pollutant in a lake is equal to the inflow of the pollutant minus the outflow of the pollutant:
 \begin{gather*}
-    \frac{\d M}{\d t} = \text{inflow of pollutant} - \text{outflow of pollutant}
+    \frac{\d y}{\d t} = \text{inflow of pollutant} - \text{outflow of pollutant}
 \end{gather*}
 Since inflow water is clean, the inflow of pollutant is equal to zero:
 \begin{gather*}
-    \frac{\d M}{\d t} = 0 - \text{outflow of pollutant}
+    \frac{\d y}{\d t} = 0 - \text{outflow of pollutant}
 \end{gather*}
 The outflow of pollutant is equal to the outflow rate of the lake times the concentration of pollutant in the lake (this number represents the amount of pollutant leaving the lake as water flows out):
 \begin{gather*}
-    \frac{\d M}{\d t} = - Q_{out} \cdot C(t)
+    \frac{\d y}{\d t} = - r \cdot C(t)
 \end{gather*}
-Since concentration is defined as mass per unit volume, we can express mass as the product of concentration and volume:
+Since concentration is defined as mass per unit volume, we can rewrite the formula as:
 \begin{gather*}
-    C(t) = \frac{M(t)}{V} \implies M(t) = C(t) V
+    \frac{\d y}{\d t} = - \frac{r}{V} \cdot  y(t)
 \end{gather*}
-Volume is constant, thus \(\frac{\d M}{\d t}\) becomes
-\begin{gather*}
-    V \frac{\d C}{\d t} = - Q_{out} C(t)
-\end{gather*}
-Rewriting using Lagrange notation (or prime notation) \cite{NotationDifferentiation2025}, we obtain a first-order ordinary differential equation:
-\begin{gather*}
-    V C'(t) = - Q_{out} C(t)
-\end{gather*}
-To solve this differential equation, we first move all terms involving \(C\) to the left side:
-\begin{gather*}
-    V C'(t) + Q_{out} C(t) = 0
-\end{gather*}
-The characteristic equation is:
-\begin{gather*}
-    V r + Q_{out} r^0 = 0 \implies r = -\frac{Q_{out}}{V}
-\end{gather*}
-Thus, the general solution of the differential equation is:
-\begin{gather*}
-    C(t) = C_1 e^{-\frac{Q_{out}}{V} t}
-\end{gather*}
-where \(C_1 \in \mathbb{R}\) is a real constant. 
 
-To determine \(C_1\), we use the initial condition that at time \(t = 0\), the concentration is equal to the initial concentration \(C_0\):
+This is a separable equation, so we can solve it by first separating the variables on opposite sides of the equation:
 \begin{gather*}
-    C(0) = C_1 e^{-\frac{Q_{out}}{V} \cdot 0} \implies C_1 = C_0
+    \frac{1}{y}  dy = -\frac{r}{V} dt
 \end{gather*}
-Therefore, the rate of change of the concentration of pollutant in the lake over time is dependent on the initial concentration:
+Next, we integrate both sides of the equation to reach the implicit solution:
+\begin{gather*}
+    \int \frac{1}{y}  dy = \int -\frac{r}{V} dt \\
+    ln(y) = -\frac{r}{V} \cdot t + C \\
+    e^{ln(y)} = e^{-\frac{r}{V} \cdot t} \cdot e^{C} \\
+    y = e^{-\frac{r}{V} \cdot t} \cdot C
+\end{gather*}
+
+To determine \(C\), we use the initial condition that at time \(t = 0\), the mass of pollutant is equal to the initial one \(y_0\):
+\begin{gather*}
+    y(0) = e^{-\frac{r}{V} \cdot 0} \cdot C \implies C = y_0
+\end{gather*}
+Therefore, the rate of change of the mass of pollutant in the lake over time is dependent on the initial mass:
+\begin{gather*}
+    y(t) = y_0 e^{-\frac{r}{V} \cdot t}
+\end{gather*}
+From section~\ref{sec:draining_lakes} we know the values of $\frac{V}{r}$, which in here we can denote as \(\tau\). In this manner, the final form  of our equation becomes:
 \begin{equation}
-    C(t) = C_0 e^{-\frac{Q_{out}}{V} t}
+    y(t) = y_0 e^{-\frac{t}{\tau}}
     \label{eq:concentration_over_time}
 \end{equation}
 
 \subsection{Time to reduce pollution to 50\%} \label{sec:reduce_50_percent}
 
-To find the time \(t\) it takes to reduce the pollution concentration to 50\% of its original level, we must find the \(t\) such that:
+To find the time \(t\) it takes to reduce the pollution to 50\% of its original level, we must find the \(t\) such that:
 \begin{gather*}
-    C(t) = 0.50 \cdot C_0
+    y(t) = 0.5 \cdot y_0
 \end{gather*}
 Using equation~\eqref{eq:concentration_over_time}, we have:
 \begin{gather*}
-    C_0 e^{-\frac{Q_{out}}{V} t} = 0.50 \cdot C_0 \\
-    e^{-\frac{Q_{out}}{V} t} = 0.50 \\
-    -\frac{Q_{out}}{V} t = \ln(0.50) \\
-    t = -\frac{V}{Q_{out}} \ln(0.50)
+y_0 e^{-\frac{t}{\tau}} = 0.5 \cdot y_0 \\
+    e^{-\frac{t}{\tau}} = 0.5 \\
+    -\frac{t}{\tau}  = \ln(0.5) \\
+    t = - \tau \ln(0.5) \\
+    t = - \tau \cdot 0.6931
 \end{gather*}
 
-An important observation is that, since the initial concentration \(C_0\) cancels out, the time to reduce pollution is independent of its initial concentration.
+An important observation is that, since the initial level of pollutant \(y_0\) cancels out, the time to reduce pollution is independent of its initial mass.
 
-Table~\ref{table:reduce_50_percent_times} shows the computed times to reduce the pollution concentration to 50\% of its original level for each lake, using the given volumes and outflow rates.
+Table~\ref{table:reduce_50_percent_times} shows the computed times to reduce the pollution level to 50\% of its original one for each lake, using the given volumes and outflow rates.
 
 \begin{table}[H]
     \centering
@@ -285,12 +281,13 @@ Table~\ref{table:reduce_50_percent_times} shows the computed times to reduce the
 
 \subsection{Time to reduce pollution to 5\%}
 
-Similarly, as in section~\ref{sec:reduce_50_percent}, the time \(t\) it takes for each lake to reduce the pollution concentration to 5\% of its original level can be computed with:
+Similarly, as in section~\ref{sec:reduce_50_percent}, the time \(t\) it takes for each lake to reduce the pollution level to 5\% of its original level can be computed with:
 \begin{gather*}
-    t = -\frac{V}{Q_{out}} \ln(0.05)
+    t = -{\tau} \cdot \ln(0.05) \\
+    t = -\tau \cdot 2.9957
 \end{gather*}
 
-Table~\ref{table:reduce_5_percent_times} shows the computed times to reduce the pollution concentration to 5\% of its original level for each lake, using the given volumes and outflow rates.
+Table~\ref{table:reduce_5_percent_times} shows the computed times to reduce the pollution level to 5\% of its original level for each lake, using the given volumes and outflow rates.
 
 \begin{table}[H]
     \centering
