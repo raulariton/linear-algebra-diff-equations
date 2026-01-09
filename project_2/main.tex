@@ -335,6 +335,91 @@ Figure~\ref{fig:pollution_decay} illustrates the reduction (\emph{decay}) of pol
     \noindent Finally, to take into account the fact that pollution from one lake flows into the next lake in the chain, use the entire multiple compartment model given to determine when the pollution level in each lake has been reduced to 50\% of its original level, assuming pollution has ceased (that is, inflows not from a lake are clean water). Assume that all the lakes initially have the same pollution concentration p. How long would it take for the pollution to be reduced to 5\% of its original level?
 \end{framed}
 
+We denote the initial concentration of pollutant with \(p\), so~\eqref{eq:concentration_over_time} becomes:
+\begin{equation}
+    C(t) = p e^{-\frac{r}{V} t}
+    \label{eq:concentration_over_time_new}
+\end{equation}
+
+We begin in the same way as before, with the rate of change of the pollutant mass in the water:
+\begin{gather*}
+    \frac{\d M}{\d t} = \text{inflow of pollutant} - \text{outflow of pollutant}
+\end{gather*}
+
+As seen in figure~\ref{fig:great_lakes_model}, lakes Superior and Michigan have no inflow from other lakes, so their inflow of pollutant is equal to zero, therefore the concentration of pollutant in these lakes is given by equation~\eqref{eq:concentration_over_time_new}.
+\begin{gather*}
+    C_{Superior}(t) = p e^{-\frac{r_S}{V_{S}} t} \\
+    C_{Michigan}(t) = p e^{-\frac{r_M}{V_{M}} t}
+\end{gather*}
+
+For lake Huron, the inflow of pollutant comes from lake Superior and Michigan. Thus, the rate of change of pollutant mass in lake Huron is:
+\begin{gather*}
+    \frac{\d M_{H}}{\d t} = \left(C_{S}r_S + C_{M}r_M\right) - (C_{H} r_H)
+\end{gather*}
+
+Let us consider the rate of change of the concentration of pollutant, by dividing both sides by the volume of lake Huron:
+\begin{gather*}
+    \frac{\d \frac{M_H}{V_H}}{\d t} = \frac{\d C_{H}}{\d t} = \frac{\left(C_{S}r_S + C_{M}r_M\right) - (C_{H} r_H)}{V_{H}}
+\end{gather*}
+
+Now we substitute the formulas for \(C_{S}\) and \(C_{M}\):
+\begin{gather*}
+    \frac{\d C_{H}}{\d t} = \frac{\left(r_S p e^{-\frac{r_S}{V_{S}} t} + r_M p e^{-\frac{r_M}{V_{M}} t}\right) - (C_{H} r_H)}{V_{H}}
+\end{gather*}
+
+This is a first-order linear ordinary differential equation. Let us write it in standard form:
+\begin{gather*}
+    \frac{\d C_{H}}{\d t} + \frac{r_H}{V_H} C_{H} = \frac{r_S p e^{-\frac{r_S}{V_{S}} t} + r_M p e^{-\frac{r_M}{V_{M}} t}}{V_{H}}
+\end{gather*}
+
+We use the integrating factor method to solve this differential equation. The integrating factor \(\mu(t)\) is given by:
+\begin{gather*}
+    \mu(t) = e^{\int \frac{r_H}{V_H} \, \d t} = e^{\frac{r_H}{V_H} t}
+\end{gather*}
+We multiply both sides of the differential equation by the integrating factor:
+\begin{gather*}
+    \frac{\d \left(e^{\frac{r_H}{V_H} t} C_H \right)}{\d t} = e^{\frac{r_H}{V_H} t} \cdot \frac{r_S p e^{-\frac{r_S}{V_{S}} t} + r_M p e^{-\frac{r_M}{V_{M}} t}}{V_{H}}
+\end{gather*}
+
+Integrating both sides with respect to \(t\), we obtain:
+\begin{gather*}
+    e^{\frac{r_H}{V_H} t} C_H = \int e^{\frac{r_H}{V_H} t} \cdot \frac{r_S p e^{-\frac{r_S}{V_{S}} t} + r_M p e^{-\frac{r_M}{V_{M}} t}}{V_{H}} \, \d t \\
+\end{gather*}
+For simplicity, let us denote:
+\begin{gather*}
+    \tau_S = \frac{V_S}{r_{S}} \\
+    \tau_M = \frac{V_M}{r_{M}} \\
+    \tau_H = \frac{V_H}{r_{H}}
+\end{gather*}
+Thus, we have
+\begin{gather*}
+    e^{\frac{1}{\tau_H} t} C_H = \int e^{\frac{1}{\tau_H} t} \cdot \frac{r_S p e^{-\frac{1}{\tau_S} t} + r_M p e^{-\frac{1}{\tau_M} t}}{V_{H}} \, \d t \\
+    e^{\frac{1}{\tau_H} t} C_H = \int \frac{r_S p e^{\left(\frac{1}{\tau_H} - \frac{1}{\tau_S}\right) t} + r_M p e^{\left(\frac{1}{\tau_H} - \frac{1}{\tau_M}\right) t}}{V_{H}} \, \d t \\
+    e^{\frac{1}{\tau_H} t} C_H = \int \frac{r_S p}{V_H} e^{\left(\frac{1}{\tau_H} - \frac{1}{\tau_S}\right) t} \, \d t + \int \frac{r_M p}{V_H} e^{\left(\frac{1}{\tau_H} - \frac{1}{\tau_M}\right) t} \, \d t \\
+    e^{\frac{1}{\tau_H} t} C_H = \frac{r_S p}{V_H} \int e^{\left(\frac{1}{\tau_H} - \frac{1}{\tau_S}\right) t} \, \d t + \frac{r_M p}{V_H} \int  e^{\left(\frac{1}{\tau_H} - \frac{1}{\tau_M}\right) t} \, \d t \\
+    e^{\frac{1}{\tau_H} t} C_H = \frac{r_S p}{V_H \left(\frac{1}{\tau_H} - \frac{1}{\tau_S}\right)} e^{\left(\frac{1}{\tau_H} - \frac{1}{\tau_S}\right) t} + \frac{r_M p}{V_H \left(\frac{1}{\tau_H} - \frac{1}{\tau_M}\right)} e^{\left(\frac{1}{\tau_H} - \frac{1}{\tau_M}\right) t} + C_2
+\end{gather*}
+where \(C_2\) is a constant \(\in \mathbb{R}\). Finally, we solve for \(C_H\):
+\begin{gather*}
+    C_H = \frac{r_S p}{V_H \left(\frac{1}{\tau_H} - \frac{1}{\tau_S}\right)} e^{-\frac{1}{\tau_S} t} + \frac{r_M p}{V_H \left(\frac{1}{\tau_H} - \frac{1}{\tau_M}\right)} e^{-\frac{1}{\tau_M} t} + C_2 e^{-\frac{1}{\tau_H} t}
+\end{gather*}
+And this is the formula for the concentration of pollutant in lake Huron over time, taking into account the inflow of pollutant from lakes Superior and Michigan:
+\begin{equation*}
+    C_H(t) = \frac{r_S p}{V_H \left(\frac{1}{\tau_H} - \frac{1}{\tau_S}\right)} e^{-\frac{1}{\tau_S} t} + \frac{r_M p}{V_H \left(\frac{1}{\tau_H} - \frac{1}{\tau_M}\right)} e^{-\frac{1}{\tau_M} t} + C_2 e^{-\frac{1}{\tau_H} t}
+\end{equation*}
+The constant \(C_2\) can be determined using the initial condition \(C_H(0) = p\):
+\begin{gather*}
+    p = \frac{r_S p}{V_H \left(\frac{1}{\tau_H} - \frac{1}{\tau_S}\right)} + \frac{r_M p}{V_H \left(\frac{1}{\tau_H} - \frac{1}{\tau_M}\right)} + C_2 \\
+    C_2 = p - \frac{r_S p}{V_H \left(\frac{1}{\tau_H} - \frac{1}{\tau_S}\right)} - \frac{r_M p}{V_H \left(\frac{1}{\tau_H} - \frac{1}{\tau_M}\right)}
+\end{gather*}
+Thus, the final formula for the concentration of pollutant in lake Huron over time is:
+\begin{equation}
+    \begin{split}
+        \label{eq:concentration_huron}
+        C_H(t) = \frac{r_S p}{V_H \left(\frac{1}{\tau_H} - \frac{1}{\tau_S}\right)} e^{-\frac{1}{\tau_S} t} + \frac{r_M p}{V_H \left(\frac{1}{\tau_H} - \frac{1}{\tau_M}\right)} e^{-\frac{1}{\tau_M} t} + \\ \left(p - \frac{r_S p}{V_H \left(\frac{1}{\tau_H} - \frac{1}{\tau_S}\right)} - \frac{r_M p}{V_H \left(\frac{1}{\tau_H} - \frac{1}{\tau_M}\right)}\right) e^{-\frac{1}{\tau_H} t}
+    \end{split}
+\end{equation}
+
 \newpage \printbibliography
 
 \newpage \appendix
