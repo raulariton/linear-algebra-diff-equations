@@ -123,7 +123,7 @@ The following assumptions are made and maintained for the entirety of the proble
     \item Pollutants are dissolved in the water and enter or leave by inflow or outflow of water.
 \end{itemize}
 
-\newpage \section{``Draining'' each lake of pollutants}
+\newpage \section{``Draining'' each lake of pollutants} \label{sec:draining_lakes}
 
 \begin{framed}
     \noindent Use the outflow rates given to determine the time it would take to ``drain'' each lake. This gives a lower bound on how long it would take to remove all the pollutants.
@@ -187,7 +187,7 @@ Let us consider the following notation:
 \begin{itemize}
     \item \(V\) - volume of the lake ($\unit{\cubic\mile}$)
     \item \(r\) - outflow rate ($\unit{\cubic\mile \per \text{year}}$)
-    \item \(C(t)\) - concentration of pollutant in the lake at time \(t\) ($\unit{\kilo\gram / \kilo\cubic\meter}$) (mass per unit volume = $\frac{y(t)}{V}$)
+    \item \(C(t)\) - concentration of pollutant in the lake at time \(t\) ($\unit{\kilo\gram / \cubic\mile}$) (mass per unit volume = $\frac{y(t)}{V}$)
     \item \(C_0\) - initial concentration of pollutant in the lake at time \(t = 0\) ($\unit{\kilo\gram / \cubic\mile}$)
     \item \(y(t)\) - mass of pollutant in the lake at time \(t\) ($\unit{\kilo\gram}$)
 \end{itemize}
@@ -229,7 +229,7 @@ Therefore, the rate of change of the mass of pollutant in the lake over time is 
 \begin{gather*}
     y(t) = y_0 e^{-\frac{r}{V} \cdot t}
 \end{gather*}
-From point a) we know the computations of $\frac{V}{r}$, which in here we can denote as \(\tau\). In this manner, the final form  of our equation becomes:
+From section~\ref{sec:draining_lakes} we know the values of $\frac{V}{r}$, which in here we can denote as \(\tau\). In this manner, the final form  of our equation becomes:
 \begin{equation}
     y(t) = y_0 e^{-\frac{t}{\tau}}
     \label{eq:concentration_over_time}
