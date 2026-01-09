@@ -102,7 +102,7 @@
 
 \section{Cleaning Up the Great Lakes}
 
-In this project, we aim to solve a \textit{compartmental modelling} problem proposed in \cite[pp.~313--314]{Kent_Nagle2018-ig}. The problem involves estimating the time it would take to clean up the Great Lakes (figure) of pollutants at varying levels of accuracy.
+In this project, we aim to solve a \textit{compartmental modelling} problem proposed in \cite[pp.~313--314]{Kent_Nagle2018-ig}. The problem involves estimating the time it would take to clean up the Great Lakes (figure~\ref{fig:great_lakes}) of pollutants at varying levels of accuracy.
 
 \begin{figure}[h!]
     \centering
@@ -354,7 +354,6 @@ t_max = 700  # years
 t = np.linspace(0, t_max, 500)
 
 # load lake data from json
-# use os to get absolute path to the json file
 with open('lakes.json'), 'r') as file:
     data = json.load(file)
 
