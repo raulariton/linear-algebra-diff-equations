@@ -175,9 +175,8 @@ Table~\ref{table:drain_times} shows the computed times to drain each lake, using
 
 We have assumed that volume of all the lakes remain constant, meaning that the inflow rate \(r_{i}\) is equal to the outflow rate \(r\). To model this problem in an even simpler manner, we can think of each lake as a full cup of water with soda syrup dissolved in it. If we were to place the cup over a sink, and start pouring water into the cup while letting the water-syrup mixture flow out of the cup, we would eventually end up with a cup full of only water, as the syrup would be washed away by the inflowing water. The time it would take to completely wash away the syrup from the cup can be computed by dividing the volume of the cup by the outflow rate. Notice how the volume of the cup remains constant (full).
 
-% figure?
-
 \newpage \section{Assuming clean water inflow}
+\label{sect:point_b}
 
 \begin{framed}
     \noindent A better estimate is obtained by assuming that each lake is a separate tank with \emph{only} clean water flowing in. Use this approach to determine how long it would take the pollution level in each lake to be reduced to 50\% of its original level. How long would it take to reduce the pollution to 5\% of its original level?
@@ -243,7 +242,7 @@ To find the time \(t\) it takes to reduce the pollution to 50\% of its original 
 \end{gather*}
 Using equation~\eqref{eq:concentration_over_time}, we have:
 \begin{gather*}
-y_0 e^{-\frac{t}{\tau}} = 0.5 \cdot y_0 \\
+    y_0 e^{-\frac{t}{\tau}} = 0.5 \cdot y_0 \\
     e^{-\frac{t}{\tau}} = 0.5 \\
     -\frac{t}{\tau}  = \ln(0.5) \\
     t = - \tau \ln(0.5) \\
@@ -315,8 +314,6 @@ Table~\ref{table:reduce_5_percent_times} shows the computed times to reduce the 
 \end{table}
 
 Figure~\ref{fig:pollution_decay} illustrates the reduction (\emph{decay}) of pollution in each of the Great Lakes over time, assuming clean water inflow. The plot was generated using the \texttt{matplotlib} library in Python. The code can be found in listing~\ref{lst:pollution-reduction-plot}.
-
-% The plot not only visualizes the timescale of pollution reduction, but also emphasizes the exponential nature of the pollution reduction process, as described by equation~\eqref{eq:concentration_over_time}. It also highlights the differences in time scales among the lakes, which depend on the outflow rate to volume ratio of the lakes. For instance, Lake Superior takes significantly longer to reduce pollution compared to Lake Erie, due to its larger volume and lower outflow rate relative to its size.
 \begin{figure}[H]
     \centering
     \scalebox{0.85}{\input{assets/pollution_decay.pgf}}
@@ -332,90 +329,295 @@ Figure~\ref{fig:pollution_decay} illustrates the reduction (\emph{decay}) of pol
     \noindent Finally, to take into account the fact that pollution from one lake flows into the next lake in the chain, use the entire multiple compartment model given to determine when the pollution level in each lake has been reduced to 50\% of its original level, assuming pollution has ceased (that is, inflows not from a lake are clean water). Assume that all the lakes initially have the same pollution concentration p. How long would it take for the pollution to be reduced to 5\% of its original level?
 \end{framed}
 
-We denote the initial concentration of pollutant with \(p\), so~\eqref{eq:concentration_over_time} becomes:
+To determine the time it would take to reduce the pollution level by a certain percentage in each lake, we must determine the formulas for the mass of pollutant in each lake over time, now taking into account flow between lakes.
+
+Using the assumption that all lakes initially have the same pollution concentration p, we can write:
+
+$$
+    p = \frac{y_{S}}{V_{S}} = \frac{y_{M}}{V_{M}} = \frac{y_{H}}{V_{H}} = \frac{y_{E}}{V_{E}} = \frac{y_{N}}{V_{N}}
+$$
+
+From this we can denote that for any lake, at $t = 0$ their level of pollutant is:
+$$y_{0} = p  V$$
+
+
+We begin in the same way as before, with the rate of change of the pollutant mass in the water
+\begin{gather*}
+    \frac{\d y}{\d t} = \text{inflow of pollutant} - \text{outflow of pollutant}
+\end{gather*}
+
+\subsection*{Finding the mass of pollutant in lakes Superior and Michigan over time}
+As seen in figure~\ref{fig:great_lakes_model}, lakes \textbf{Superior} and \textbf{Michigan} have no inflow from other lakes, so their inflow of pollutant is equal to zero, therefore the level of pollutant in these lakes is given by equation~\eqref{eq:concentration_over_time}, where $k = \frac{1}{\tau} = \frac{r}{V}$.
+\begin{equation*}
+    y_{S}(t) = y_{S_0} \cdot e^{-k_{S}t} = (p \cdot V_{S}) \cdot e^{-k_{S}t}\\
+\end{equation*}
+\begin{equation*}
+    y_{M}(t) = y_{M_0} \cdot e^{-k_{M}t} = (p \cdot V_{M}) \cdot e^{-k_{M}t}
+\end{equation*}
+Let us denote \(p V_S = A\) and \(p V_M = B\) for simplicity.
 \begin{equation}
-    C(t) = p e^{-\frac{r}{V} t}
-    \label{eq:concentration_over_time_new}
+    \label{eq:mass_pollutant_superior}
+    y_{S}(t) = A \cdot e^{-k_{S}t}
+\end{equation}
+\begin{equation}
+    \label{eq:mass_pollutant_michigan}
+    y_{M}(t) = B \cdot e^{-k_{M}t}
 \end{equation}
 
-We begin in the same way as before, with the rate of change of the pollutant mass in the water:
+\subsection*{Finding the mass of pollutant in lake Huron over time}
+For lake \textbf{Huron}, the inflow of pollutant comes from lake Superior and Michigan. Thus, the rate of change of pollutant mass in lake Huron is:
 \begin{gather*}
-    \frac{\d M}{\d t} = \text{inflow of pollutant} - \text{outflow of pollutant}
+    \frac{\d y_{H}}{\d t} = r_{S} \cdot \frac{y_{S}}{V_S} + r_{M} \cdot \frac{y_{M}}{V_M} - r_{H} \cdot \frac{y_{H}}{V_H}
 \end{gather*}
 
-As seen in figure~\ref{fig:great_lakes_model}, lakes Superior and Michigan have no inflow from other lakes, so their inflow of pollutant is equal to zero, therefore the concentration of pollutant in these lakes is given by equation~\eqref{eq:concentration_over_time_new}.
-\begin{gather*}
-    C_{Superior}(t) = p e^{-\frac{r_S}{V_{S}} t} \\
-    C_{Michigan}(t) = p e^{-\frac{r_M}{V_{M}} t}
-\end{gather*}
 
-For lake Huron, the inflow of pollutant comes from lake Superior and Michigan. Thus, the rate of change of pollutant mass in lake Huron is:
-\begin{gather*}
-    \frac{\d M_{H}}{\d t} = \left(C_{S}r_S + C_{M}r_M\right) - (C_{H} r_H)
-\end{gather*}
+By substituting we get the form:
 
-Let us consider the rate of change of the concentration of pollutant, by dividing both sides by the volume of lake Huron:
-\begin{gather*}
-    \frac{\d \frac{M_H}{V_H}}{\d t} = \frac{\d C_{H}}{\d t} = \frac{\left(C_{S}r_S + C_{M}r_M\right) - (C_{H} r_H)}{V_{H}}
-\end{gather*}
+$$\frac{\d y_H}{\d t} = \left(k_S \cdot y_S + k_M \cdot y_M\right) - k_H \cdot y_H$$
 
-Now we substitute the formulas for \(C_{S}\) and \(C_{M}\):
-\begin{gather*}
-    \frac{\d C_{H}}{\d t} = \frac{\left(r_S p e^{-\frac{r_S}{V_{S}} t} + r_M p e^{-\frac{r_M}{V_{M}} t}\right) - (C_{H} r_H)}{V_{H}}
-\end{gather*}
 
-This is a first-order linear ordinary differential equation. Let us write it in standard form:
-\begin{gather*}
-    \frac{\d C_{H}}{\d t} + \frac{r_H}{V_H} C_{H} = \frac{r_S p e^{-\frac{r_S}{V_{S}} t} + r_M p e^{-\frac{r_M}{V_{M}} t}}{V_{H}}
-\end{gather*}
+This is a first-order linear differential equation. Let us write it in standard form $\frac{\d y}{\d x} + P(x) \cdot y = F(x)$:
+
+$$\frac{\d y_H}{\d t} + k_H \cdot y_H = k_S \cdot y_S + k_M \cdot y_M $$
 
 We use the integrating factor method to solve this differential equation. The integrating factor \(\mu(t)\) is given by:
 \begin{gather*}
-    \mu(t) = e^{\int \frac{r_H}{V_H} \, \d t} = e^{\frac{r_H}{V_H} t}
+    \mu(t) = e^{\int p(t) \, \d t} \\
+    \mu(t) = e^{\int k_H \, \d t} = e^{k_H t}
 \end{gather*}
+
 We multiply both sides of the differential equation by the integrating factor:
 \begin{gather*}
-    \frac{\d \left(e^{\frac{r_H}{V_H} t} C_H \right)}{\d t} = e^{\frac{r_H}{V_H} t} \cdot \frac{r_S p e^{-\frac{r_S}{V_{S}} t} + r_M p e^{-\frac{r_M}{V_{M}} t}}{V_{H}}
+    e^{k_H t} \cdot  (\frac{\d y_H}{\d t} + k_H \cdot y_H) = e^{k_H t} \cdot (k_S \cdot y_S + k_M \cdot y_M) \\
+    e^{k_H t} \cdot \frac{\d}{\d t}( y_H) + \frac{\d}{\d t} e^{k_H t}  \cdot y_H = e^{k_H t} \cdot (k_S \cdot y_S + k_M \cdot y_M) \\
+    \frac{\d}{\d t}(e^{k_H t} \cdot y_H) = e^{k_H t} \cdot (k_S \cdot y_S + k_M \cdot y_M)
 \end{gather*}
 
 Integrating both sides with respect to \(t\), we obtain:
 \begin{gather*}
-    e^{\frac{r_H}{V_H} t} C_H = \int e^{\frac{r_H}{V_H} t} \cdot \frac{r_S p e^{-\frac{r_S}{V_{S}} t} + r_M p e^{-\frac{r_M}{V_{M}} t}}{V_{H}} \, \d t \\
+    e^{k_H t} y_H = \int e^{k_H t} (k_S y_S + k_M y_M) \, \d t \\
+    e^{k_H t} y_H = \int e^{k_H t} (k_S y_{S_0} e^{-k_S t} + k_M y_{M_0} e^{-k_M t}) \, \d t \\
+    e^{k_H t} y_H = \int k_S y_{S_0} e^{-k_S t + k_H t} \, \d t + \int k_M y_{M_0} e^{-k_M t + k_H t} \, \d t \\
+    e^{k_H t} y_H = k_S y_{S_0} \int e^{-k_S t + k_H t} \, \d t + k_M y_{M_0} \int e^{-k_M t + k_H t} \, \d t \\
+    e^{k_H t} y_H = k_S y_{S_0} \left[\frac{1}{- k_S + k_H} e^{- k_S t + k_H t}\right] + k_M y_{M_0} \left[\frac{1}{- k_M + k_H} e^{- k_M t + k_H t}\right] + C_H \\
+    e^{k_H t} y_H = \frac{k_S y_{S_0}}{k_H - k_S} e^{- k_S t + k_H t} + \frac{k_M y_{M_0}}{k_H - k_M} e^{- k_M t + k_H t} + C_H
 \end{gather*}
-For simplicity, let us denote:
+Where \(C_H\) is a constant \(\in \mathbb{R}\).
+Now we solve for \(y_H\) to obtain the formula for the mass of pollutant in lake Huron over time:
 \begin{gather*}
-    \tau_S = \frac{V_S}{r_{S}} \\
-    \tau_M = \frac{V_M}{r_{M}} \\
-    \tau_H = \frac{V_H}{r_{H}}
+    y_H(t) = - \frac{k_S y_{S_0}}{k_H - k_S} e^{- k_S t + k_H t - k_H t} - \frac{k_M y_{M_0}}{k_H - k_M} e^{- k_M t + k_H t - k_H t} + C_H e^{-k_H t} \\
+    y_H(t) = - \frac{k_S y_{S_0}}{k_H - k_S} e^{- k_S t} - \frac{k_M y_{M_0}}{k_H - k_M} e^{- k_M t} + C_H e^{-k_H t}
 \end{gather*}
-Thus, we have
+Recalling that \(y_{S_0} = A\) and \(y_{M_0} = B\), we can notice that:
 \begin{gather*}
-    e^{\frac{1}{\tau_H} t} C_H = \int e^{\frac{1}{\tau_H} t} \cdot \frac{r_S p e^{-\frac{1}{\tau_S} t} + r_M p e^{-\frac{1}{\tau_M} t}}{V_{H}} \, \d t \\
-    e^{\frac{1}{\tau_H} t} C_H = \int \frac{r_S p e^{\left(\frac{1}{\tau_H} - \frac{1}{\tau_S}\right) t} + r_M p e^{\left(\frac{1}{\tau_H} - \frac{1}{\tau_M}\right) t}}{V_{H}} \, \d t \\
-    e^{\frac{1}{\tau_H} t} C_H = \int \frac{r_S p}{V_H} e^{\left(\frac{1}{\tau_H} - \frac{1}{\tau_S}\right) t} \, \d t + \int \frac{r_M p}{V_H} e^{\left(\frac{1}{\tau_H} - \frac{1}{\tau_M}\right) t} \, \d t \\
-    e^{\frac{1}{\tau_H} t} C_H = \frac{r_S p}{V_H} \int e^{\left(\frac{1}{\tau_H} - \frac{1}{\tau_S}\right) t} \, \d t + \frac{r_M p}{V_H} \int  e^{\left(\frac{1}{\tau_H} - \frac{1}{\tau_M}\right) t} \, \d t \\
-    e^{\frac{1}{\tau_H} t} C_H = \frac{r_S p}{V_H \left(\frac{1}{\tau_H} - \frac{1}{\tau_S}\right)} e^{\left(\frac{1}{\tau_H} - \frac{1}{\tau_S}\right) t} + \frac{r_M p}{V_H \left(\frac{1}{\tau_H} - \frac{1}{\tau_M}\right)} e^{\left(\frac{1}{\tau_H} - \frac{1}{\tau_M}\right) t} + C_2
+    y_H(t) = \frac{k_S}{k_H - k_S} A e^{- k_S t} + \frac{k_M}{k_H - k_M} B e^{- k_M t} + C_H e^{-k_H t}
 \end{gather*}
-where \(C_2\) is a constant \(\in \mathbb{R}\). Finally, we solve for \(C_H\):
+Let us denote:
+\[
+    y_H(t) = \underbrace{\frac{k_S}{k_H - k_S} A}_{H_S} e^{- k_S t} + \underbrace{\frac{k_M}{k_H - k_M} B}_{H_M} e^{- k_M t} + C_H e^{-k_H t} \\
+\]
+We notice that:
 \begin{gather*}
-    C_H = \frac{r_S p}{V_H \left(\frac{1}{\tau_H} - \frac{1}{\tau_S}\right)} e^{-\frac{1}{\tau_S} t} + \frac{r_M p}{V_H \left(\frac{1}{\tau_H} - \frac{1}{\tau_M}\right)} e^{-\frac{1}{\tau_M} t} + C_2 e^{-\frac{1}{\tau_H} t}
+    H_i = \frac{k_i}{k_H - k_i} V_i p
 \end{gather*}
-And this is the formula for the concentration of pollutant in lake Huron over time, taking into account the inflow of pollutant from lakes Superior and Michigan:
-\begin{equation*}
-    C_H(t) = \frac{r_S p}{V_H \left(\frac{1}{\tau_H} - \frac{1}{\tau_S}\right)} e^{-\frac{1}{\tau_S} t} + \frac{r_M p}{V_H \left(\frac{1}{\tau_H} - \frac{1}{\tau_M}\right)} e^{-\frac{1}{\tau_M} t} + C_2 e^{-\frac{1}{\tau_H} t}
-\end{equation*}
-The constant \(C_2\) can be determined using the initial condition \(C_H(0) = p\):
-\begin{gather*}
-    p = \frac{r_S p}{V_H \left(\frac{1}{\tau_H} - \frac{1}{\tau_S}\right)} + \frac{r_M p}{V_H \left(\frac{1}{\tau_H} - \frac{1}{\tau_M}\right)} + C_2 \\
-    C_2 = p - \frac{r_S p}{V_H \left(\frac{1}{\tau_H} - \frac{1}{\tau_S}\right)} - \frac{r_M p}{V_H \left(\frac{1}{\tau_H} - \frac{1}{\tau_M}\right)}
-\end{gather*}
-Thus, the final formula for the concentration of pollutant in lake Huron over time is:
+So the final equation for the mass of pollutant in lake Huron over time is:
 \begin{equation}
-    \begin{split}
-        \label{eq:concentration_huron}
-        C_H(t) = \frac{r_S p}{V_H \left(\frac{1}{\tau_H} - \frac{1}{\tau_S}\right)} e^{-\frac{1}{\tau_S} t} + \frac{r_M p}{V_H \left(\frac{1}{\tau_H} - \frac{1}{\tau_M}\right)} e^{-\frac{1}{\tau_M} t} + \\ \left(p - \frac{r_S p}{V_H \left(\frac{1}{\tau_H} - \frac{1}{\tau_S}\right)} - \frac{r_M p}{V_H \left(\frac{1}{\tau_H} - \frac{1}{\tau_M}\right)}\right) e^{-\frac{1}{\tau_H} t}
-    \end{split}
+    \label{eq:mass_pollutant_huron_with_constant}
+    y_H(t) = H_S e^{- k_S t} + H_M e^{- k_M t} + C_H e^{-k_H t}
 \end{equation}
+
+\subsection*{Finding the mass of pollutant in lakes Erie and Ontario over time}
+For lake \textbf{Erie}, the inflow comes from lake Huron. So, applying the same logic as previously done, the rate of change of pollutant mass in lake Erie is:
+\begin{gather*}
+    \frac{\d y_{E}}{\d t} = k_H \cdot y_H - k_E \cdot y_E
+\end{gather*}
+
+This is a first-order linear differential equation:
+
+$$
+    \frac{\d y_{E}}{\d t} = k_H \cdot y_H - k_E \cdot y_E
+$$
+$$
+    \frac{\d y_{E}}{\d t} + k_E \cdot y_E = k_H \cdot y_H
+$$
+
+We find the integrating factor:
+$$
+    \mu(t) = \int e ^ {k_E t} \d t = e^{k_E t}
+$$
+
+Then we multiply both sides by the integrating factor:
+
+\begin{gather*}
+    e^{k_E t} \cdot  (\frac{\d y_E}{\d t} + k_E \cdot y_E) = e^{k_E t} \cdot k_H \cdot y_H  \\
+    e^{k_E t} \cdot \frac{\d}{\d t}( y_E) + \frac{\d}{\d t} e^{k_E t}  \cdot y_E = e^{k_H t} \cdot k_H \cdot y_H \\
+    \frac{\d}{\d t}(e^{k_E t} \cdot y_E) = e^{k_E t} \cdot k_H \cdot y_H
+\end{gather*}
+Integrating both sides with respect to \(t\), we obtain:
+\begin{gather*}
+    \frac{\d}{\d t}(e^{k_E t} \cdot y_E) = e^{k_E t} \cdot k_H \cdot y_H \\
+    e^{k_E t} y_E = \int e^{k_E t} k_H \left(H_S e^{- k_S t} + H_M e^{- k_M t} + C_H e^{-k_H t}\right)  \d t \\
+    e^{k_E t} y_E = \int k_H H_S e^{- k_S t + k_E t} \, \d t + \int k_H H_M e^{- k_M t + k_E t} \, \d t + \int k_H C_H e^{-k_H t + k_E t} \, \d t \\
+\end{gather*}
+\begin{equation*}
+    \begin{split}
+        e^{k_E t} y_E = k_H H_S \left[\frac{1}{k_E - k_S} e^{t(k_E - k_S)}\right] \\ + k_H H_M \left[\frac{1}{k_E - k_M} e^{t (k_E - k_M)}\right] \\ + k_H C_H \left[\frac{1}{k_E - k_H} e^{t (k_E - k_H)}\right] + C_E
+    \end{split}
+\end{equation*}
+Where \(C_E\) is a constant \(\in \mathbb{R}\).
+Now we solve for \(y_H\) to obtain the formula for the mass of pollutant in lake Huron over time:
+\begin{gather*}
+    y_E(t) = \frac{k_H H_S}{k_E - k_S} e^{- k_S t} + \frac{k_H H_M}{k_E - k_M} e^{- k_M t} + \frac{k_H C_H}{k_E - k_H} e^{-k_H t} + C_E e^{-k_E t}
+\end{gather*}
+Once again, we notice a pattern emerging, where a term of the form \[\frac{k_{prev} \cdot \text{(constant from previous lake)}}{k_{current} - k_{i}}\] appears for each upstream lake \(i\). Thus, we can denote:
+\begin{gather*}
+    y_E(t) = \underbrace{\frac{k_H H_S}{k_E - k_S}}_{E_S} e^{- k_S t} + \underbrace{\frac{k_H H_M}{k_E - k_M}}_{E_M} e^{- k_M t} + \underbrace{\frac{k_H C_H}{k_E - k_H}}_{E_H} e^{-k_H t} + C_E e^{-k_E t}
+\end{gather*}
+
+Using this pattern, we can conclude that the general solution for lake \textbf{Ontario}, which has inflow from lake Erie, will be:
+\begin{equation*}
+    \begin{split}
+        y_O(t) = \underbrace{\frac{k_E E_S}{k_O - k_S}}_{O_S} e^{- k_S t} + \underbrace{\frac{k_E E_M}{k_O - k_M}}_{O_M} e^{- k_M t} + \\ \underbrace{\frac{k_E E_H}{k_O - k_H}}_{O_H} e^{-k_H t} + \underbrace{\frac{k_E C_E}{k_O - k_E}}_{O_E} e^{-k_E t} + C_O e^{-k_O t}
+    \end{split}
+\end{equation*}
+
+\subsection*{Finding the formulas with numerical values}
+
+For lake \textbf{Superior}, the formula for the mass of pollutant over time is:
+\begin{gather*}
+    y_S(t) = 2900 p e^{\frac{-t}{193.33}}
+\end{gather*}
+For lake \textbf{Michigan}, the formula for the mass of pollutant over time is:
+\begin{gather*}
+    y_M(t) = 1180 p e^{\frac{-t}{31.05}}
+\end{gather*}
+For lake \textbf{Huron}, using equation~\eqref{eq:mass_pollutant_huron_with_constant}, the formula for the mass of pollutant over time is:
+\begin{gather*}
+    y_H(t) = \frac{k_S}{k_H - k_S} p V_S e^{- k_S t} + \frac{k_M}{k_H - k_M} p V_M e^{- k_M t} + C_H e^{-k_H t} \\
+    y_H(t) = 0.07 \cdot 2900 p e^{- \frac{t}{193.33}} + 0.67 \cdot 1180 p e^{- \frac{t}{31.05}} + C_H e^{- \frac{t}{12.50}} \\
+    y_H(t) = 200.5 p e^{- \frac{t}{193.33}} + 795.03 p e^{- \frac{t}{31.05}} + C_H e^{- \frac{t}{12.50}}
+\end{gather*}
+To compute \(C_H\), we can use the initial condition that at \(t = 0\), \(y_H(0) = y_{H_0} = p V_{H}\):
+\begin{gather*}
+    y_{H_0} = 200.5 p + 795.03 p + C_H \\
+    C_H = y_{H_0} - 200.5 p - 795.03 p \\
+    C_H = p V_{H} - 200.5 p - 795.03 p \\
+    C_H = p \left(V_{H} - 200.5 - 795.03\right)
+\end{gather*}
+Numerically, this is:
+\begin{gather*}
+    C_H = p \left(850 - 200.5 - 795.03\right) \\
+    C_H = -145.53 p
+\end{gather*}
+So, the final formula for the mass of pollutant in lake Huron over time is:
+\begin{gather*}
+    y_H(t) = 200.5 p e^{- \frac{t}{193.33}} + 795.03 p e^{- \frac{t}{31.05}} - 145.53 p e^{- \frac{t}{12.50}}
+\end{gather*}
+For lake \textbf{Erie}, we can use the pattern we observed to compute the numerical form in terms of \(p\):
+\begin{equation*}
+    \begin{split}
+        y_E(t) = \frac{k_H}{k_E - k_S} 200.5 p e^{- \frac{t}{193.33}} + \frac{k_H}{k_E - k_M} 795.03 p e^{- \frac{t}{31.05}} - \\ \frac{k_H}{k_E - k_H} 145.53 p e^{- \frac{t}{12.50}} + C_E e^{- \frac{t}{1.36}}
+    \end{split}
+\end{equation*}
+\begin{equation*}
+    \begin{split}
+        y_E(t) =  0.11 \cdot 200.5 p e^{- \frac{t}{193.33}} + 0.11 \cdot 795.03 p e^{- \frac{t}{31.05}} - \\ 0.12 \cdot 145.53 p e^{- \frac{t}{12.50}} + C_E e^{- \frac{t}{1.36}}
+    \end{split}
+\end{equation*}
+To compute \(C_E\), we use the initial condition that at \(t = 0\), \(y_E(0) = y_{E_0} = p V_{E}\):
+\begin{gather*}
+    y_{E_0} = 22.04 p + 90.79 p - 17.83 p + C_E \\
+    C_E = y_{E_0} - 22.04 p - 90.79 p + 17.83 p \\
+    C_E = p V_{E} - 22.04 p - 90.79 p + 17.83 p \\
+    C_E = p \left(V_{E} - 22.04 - 90.79 + 17.83\right) \\
+    C_E = p (116 - 22.04 - 90.79 + 17.83) \\
+    C_E = 21 p
+\end{gather*}
+So, the final formula for the mass of pollutant in lake Erie over time is:
+\begin{equation*}
+    \begin{split}
+        y_E(t) =  22.04 p e^{- \frac{t}{193.33}} + 90.79 p e^{- \frac{t}{31.05}} - \\ 17.83 p e^{- \frac{t}{12.50}} + 21 p e^{- \frac{t}{1.36}}
+    \end{split}
+\end{equation*}
+For lake Ontario, we can use the same pattern to compute the numerical form in terms of \(p\):
+\begin{equation*}
+    \begin{split}
+        y_O(t) = \frac{k_E}{k_O - k_S} 200.5 p e^{- \frac{t}{193.33}} + \frac{k_E}{k_O - k_M} 795.03 p e^{- \frac{t}{31.05}} \\ -  \frac{k_E}{k_O - k_H} 145.53 p e^{- \frac{t}{12.50}} + \frac{k_E}{k_O - k_E} 21 p e^{- \frac{t}{1.36}} + C_O e^{- \frac{t}{3.97}}
+    \end{split}
+\end{equation*}
+\begin{equation*}
+    \begin{split}
+        y_O(t) = 2.97 \cdot 200.5 p e^{- \frac{t}{193.33}} + 3.34 \cdot 795.03 p e^{- \frac{t}{31.05}} \\ - 4.26 \cdot 145.53 p e^{- \frac{t}{12.50}} - 1.52 \cdot 21 p e^{- \frac{t}{1.36}} + C_O e^{- \frac{t}{3.97}}
+    \end{split}
+\end{equation*}
+\begin{equation*}
+    \begin{split}
+        y_O(t) = 65.45 p e^{- \frac{t}{193.33}} + 302.80 p e^{- \frac{t}{31.05}} \\ - 76 p e^{- \frac{t}{12.50}} - 32 p e^{- \frac{t}{1.36}} + C_O e^{- \frac{t}{3.97}}
+    \end{split}
+\end{equation*}
+To compute \(C_O\), we use the initial condition that at \(t = 0\), \(y_O(0) = y_{O_0} = p V_{O}\):
+\begin{gather*}
+    y_{O_0} = 65.45 p + 302.80 p - 76 p - 32 p + C_O \\
+    C_O = y_{O_0} - 65.45 p - 302.80 p + 76 p + 32 p \\
+    C_O = p V_{O} - 65.45 p - 302.80 p + 76 p + 32 p \\
+    C_O = p \left(V_{O} - 65.45 - 302.80 + 76 + 32\right) \\
+    C_O = p (393 - 65.45 - 302.80 + 76 + 32) \\
+    C_O = 132.75 p
+\end{gather*}
+
+\subsection{Computing the time to reduce pollution to 50\% and 5\%}
+
+Because the equations for the pollution mass over time are \textbf{trascendental} (i.e. they involve exponential terms), they are complex and solving for \(t\) such that \(y(t) = 0.5 y_0\) or \(y(t) = 0.05 y_0\) is not trivial.
+
+Thus, we have resorted to use a numerical root finder provided by the \texttt{SciPy} library in Python, specifically the \texttt{fsolve} function from the \texttt{optimize} module.
+
+The function takes an equation to solve and an initial guess for the root. Since in section~\ref{sect:point_b} we computed the times to reduce pollution to 50\% and 5\% assuming clean water from other lakes, we decided to use those values as initial guesses for the solver.
+
+The computed times to reduce the pollution level to 50\% and 5\% of its original level for each lake, taking into account the flow between lakes, are shown in tables~\ref{table:reduce_50_percent_flow} and~\ref{table:reduce_5_percent_flow} respectively.
+
+Additionally, the code used to perform these calculations can be found in listing~\ref{lst:pollution-reduction-flow}.
+
+\begin{table}[H]
+    \centering
+    \begin{tabular}{|c|c|}
+        \hline
+        Lake     & Time (in years) to reduce to 50\% \\
+        \hline
+        Superior & 134.01                            \\
+        \hline
+        Michigan & 21.52                             \\
+        \hline
+        Huron    & 33.95                             \\
+        \hline
+        Erie     & 24.62                             \\
+        \hline
+        Ontario  & 21.63                             \\
+        \hline
+    \end{tabular}
+    \caption{Time to reduce pollution to 50\% in each lake, considering flow between lakes}
+    \label{table:reduce_50_percent_flow}
+\end{table}
+
+\begin{table}[H]
+    \centering
+    \begin{tabular}{|c|c|}
+        \hline
+        Lake     & Time (in years) to reduce to 5\% \\
+        \hline
+        Superior & 579.17                           \\
+        \hline
+        Michigan & 93.03                            \\
+        \hline
+        Huron    & 300.15                           \\
+        \hline
+        Erie     & 258.83                           \\
+        \hline
+        Ontario  & 234.21                           \\
+        \hline
+    \end{tabular}
+    \caption{Time to reduce pollution to 5\% in each lake, considering flow between lakes}
+    \label{table:reduce_5_percent_flow}
+\end{table}
 
 \newpage \printbibliography
 
@@ -444,7 +646,7 @@ with open('lakes.json'), 'r') as file:
         P = np.exp(-k * t) * 100 # e^(-kt), in percentage
         plt.plot(t, P, label=f"Lake {lake}")
 
-# Add horizontal lines for 50% and 5%
+# add horizontal lines for 50% and 5%
 plt.axhline(50, color='blue', linestyle='--', linewidth=1, label=r"50% remaining")
 plt.axhline(5, color='red', linestyle='--', linewidth=1, label=r"5% remaining")
 
@@ -456,6 +658,110 @@ plt.tight_layout()
 
 # show plot
 plt.show()
+\end{lstlisting}
+
+\begin{lstlisting}[caption={Python code used to compute the time to reduce pollution to 50\% and 5\% considering flow between lakes},
+                   label={lst:pollution-reduction-flow}]
+import numpy as np
+from scipy.optimize import fsolve
+import json
+import os
+import math
+
+# load lake data
+with open('lakes.json', 'r') as file:
+    data = json.load(file)
+
+# extract lake attributes
+V_S = data["Superior"]["vol"]
+V_M = data["Michigan"]["vol"]
+V_H = data["Huron"]["vol"]
+V_E = data["Erie"]["vol"]
+V_O = data["Ontario"]["vol"]
+
+k_S = data["Superior"]["outflow"] / V_S
+k_M = data["Michigan"]["outflow"] / V_M
+k_H = data["Huron"]["outflow"] / V_H
+k_E = data["Erie"]["outflow"] / V_E
+k_O = data["Ontario"]["outflow"] / V_O
+
+# equations for each lake
+# Superior
+def y_S(t, p=1):
+    return V_S * p * np.exp(-k_S * t)
+
+# Michigan
+def y_M(t, p=1):
+    return V_M * p * np.exp(-k_M * t)
+
+# Huron
+def y_H(t, p=1):
+    return (200.5 * p * np.exp(-k_S * t) + 
+            795.03 * p * np.exp(-k_M * t) - 
+            145.53 * p * np.exp(-k_H * t))
+
+# Erie
+def y_E(t, p=1):
+    return (22.04 * p * np.exp(-k_S * t) + 
+            90.79 * p * np.exp(-k_M * t) - 
+            17.83 * p * np.exp(-k_H * t) + 
+            21 * p * np.exp(-k_E * t))
+
+# Ontario
+def y_O(t, p=1):
+    return (65.45 * p * np.exp(-k_S * t) + 
+            302.80 * p * np.exp(-k_M * t) - 
+            76 * p * np.exp(-k_H * t) - 
+            32 * p * np.exp(-k_E * t) + 
+            132.75 * p * np.exp(-k_O * t))
+
+# computing reduction times assuming clean water inflow
+def reduction_50_percent(attributes):
+    V = attributes["vol"]
+    Q_out = attributes["outflow"]
+    result = - (V / Q_out) * math.log(0.5)
+    return result
+
+def reduction_5_percent(attributes):
+    V = attributes["vol"]
+    Q_out = attributes["outflow"]
+    result = - (V / Q_out) * math.log(0.05)
+    return result
+
+# finding time t when y(t) = target_percentage * initial_mass
+def find_time_for_percentage(lake_func, initial_mass, target_percentage, initial_guess=100):
+    def equation(t):
+        # express equation as lake_func(t) - target_percentage * initial_mass = 0
+        return lake_func(t) - target_percentage * initial_mass
+    
+    solution = fsolve(equation, initial_guess)
+    return solution[0]
+
+# lakes and their functions
+lakes = {
+    "Superior": (y_S, V_S),
+    "Michigan": (y_M, V_M),
+    "Huron": (y_H, V_H),
+    "Erie": (y_E, V_E),
+    "Ontario": (y_O, V_O)
+}
+
+# p = 1 for simplicity (cancels out anyway)
+p = 1
+
+print("Time to reduce pollution to 50%:")
+for lake_name, (lake_func, volume) in lakes.items():
+    initial_mass = volume * p
+    initial_guess = reduction_50_percent(data[lake_name])
+    t_50 = find_time_for_percentage(lake_func, initial_mass, 0.5, initial_guess=initial_guess)
+    print(f"{lake_name:10s}: {t_50:8.2f} years")
+
+print("\nTime to reduce pollution to 5%:")
+for lake_name, (lake_func, volume) in lakes.items():
+    initial_mass = volume * p
+    initial_guess = reduction_5_percent(data[lake_name])
+    t_5 = find_time_for_percentage(lake_func, initial_mass, 0.05, initial_guess=initial_guess)
+    print(f"{lake_name:10s}: {t_5:8.2f} years")
 \end{lstlisting}
 
 \end{document}
