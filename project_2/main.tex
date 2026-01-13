@@ -405,8 +405,8 @@ Integrating both sides with respect to \(t\), we obtain:
 Where \(C_H\) is a constant \(\in \mathbb{R}\).
 Now we solve for \(y_H\) to obtain the formula for the mass of pollutant in lake Huron over time:
 \begin{gather*}
-    y_H(t) = - \frac{k_S y_{S_0}}{k_H - k_S} e^{- k_S t + k_H t - k_H t} - \frac{k_M y_{M_0}}{k_H - k_M} e^{- k_M t + k_H t - k_H t} + C_H e^{-k_H t} \\
-    y_H(t) = - \frac{k_S y_{S_0}}{k_H - k_S} e^{- k_S t} - \frac{k_M y_{M_0}}{k_H - k_M} e^{- k_M t} + C_H e^{-k_H t}
+    y_H(t) = \frac{k_S y_{S_0}}{k_H - k_S} e^{- k_S t + k_H t - k_H t} + \frac{k_M y_{M_0}}{k_H - k_M} e^{- k_M t + k_H t - k_H t} + C_H e^{-k_H t} \\
+    y_H(t) = \frac{k_S y_{S_0}}{k_H - k_S} e^{- k_S t} + \frac{k_M y_{M_0}}{k_H - k_M} e^{- k_M t} + C_H e^{-k_H t}
 \end{gather*}
 Recalling that \(y_{S_0} = A\) and \(y_{M_0} = B\), we can notice that:
 \begin{gather*}
